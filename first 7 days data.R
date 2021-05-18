@@ -1,13 +1,12 @@
 library(ggplot2)
 library(reshape2)
-install.packages(reshape2)
 library(ggthemes)
 
 
 ##create number
 
-number<-floor(runif(20,0,10000))
-number[2]<-0113 #give number for orlando
+number<-floor(runif(20,1000,10000))
+number[2]<-113 #give number for orlando
 
 ##create days frame
 
@@ -23,7 +22,7 @@ for (i in 1:6){
   names(days_frame)[ncol(days_frame)]<-paste0("day_",7-i)
 }
 
-days_frame[days_frame<0]<- 0 #remove days less than 1
+days_frame[days_frame < 1]<- 0 #remove days less than 1
 days_frame
 col_names<-colnames(days_frame)
 
@@ -34,13 +33,12 @@ orders_mean[orders_mean<5]<-0
 orders_mean
 
 ##create order rnorm frame
-?data.frame()
 orders_rnorm<-data.frame(number)
 
 for(i in 1:7){
   orders_rnorm[,ncol(orders_rnorm)+1]<-floor(rnorm(20,orders_mean[,i+1],5))
 }
-colnames(orders_rnorm)<-col_names
+colnames(orders_rnorm)<-colnames(days_frame)
 orders_rnorm
 
 for(x in 1:20){
@@ -53,7 +51,7 @@ for(x in 1:20){
   }
   
 } #remove the order for days less than 1
-
+orders_rnorm
 
 
 orders_rnorm[2,2]<-4 #give the order number for orlando
@@ -72,7 +70,7 @@ for (i in 2:17){
   }
 } 
 orders<-orders[-c(2,3)] #remove extra number col
-orders
+
 
 for (i in 1:15){
   if(i==1){
@@ -80,33 +78,44 @@ for (i in 1:15){
   }else if(i%%2 ==0){
     names(orders)[i]<-paste0("day_",8-i/2)
   }else{
-    names(orders)[i]<-paste0("orders",8-floor(i/2))
+    names(orders)[i]<-paste0("orders_",8-floor(i/2))
   }
   
 } #name the cols
 
 orders
 
-##create the plot for the chapter 1
+##create the plot for the chapter 2
 
-plot_day_7<-data.frame(as.character(orders$number),orders$orders7)
+plot_day_7<-data.frame(orders$number,orders$orders_7)
 colnames(plot_day_7)<-c('number','orders')
 #label the min and max and give the color factor
-order_max<-max(plot_day_7$orders)
-order_min<-min(plot_day_7$orders)
+plot_day_7_ord<-plot_day_7
+plot_day_7_ord
+ord<-order(plot_day_7_ord$orders)
+plot_day_7_ord<-plot_day_7_ord[ord,]
+plot_day_7_ord
+n<-3
+min_num<-plot_day_7_ord$number[1:n]
+min_num
+max_num<-plot_day_7_ord$number[(21-n):20]
+max_num
+
 for (i in 1:20){
-  if (plot_day_7[i,2]== order_min){
+  if (plot_day_7[i,1] %in% min_num){
     plot_day_7[i,3]<- 'red'
-  }else if(plot_day_7[i,2]==order_max){
+  }else if(plot_day_7[i,1] %in% max_num){
     plot_day_7[i,3]<-'blue'
   }else{
     plot_day_7[i,3]<-'black'
   }
-} 
+}
+
 colnames(plot_day_7)[3]<-'color'
 plot_day_7
+
 #create the plot
-ggplot(data = plot_day_7,mapping = aes(x=number, y = orders))+
+ggplot(data = plot_day_7,mapping = aes(x=as.character(number), y = orders))+
   geom_bar(stat = 'identity', fill= plot_day_7$color)+
   labs(x="Numbers",y="Orders")+
   theme(panel.grid.major = element_blank(),
@@ -131,7 +140,9 @@ colnames(days_frame_t)<-days_frame_t[1,]
 days_frame_t<-days_frame_t[-1,]
 
 
-a<-2 ##input the delivery guy 
+num_check<-4271 ##input the delivery guy 
+
+a<-which(orders_rnorm$number == num_check)
 
 dataframe_a<-data.frame(orders_t$days,orders_t[,a],days_frame_t[,a])
 colnames(dataframe_a)<-c('days','orders','days_since_work')
@@ -143,7 +154,7 @@ positive_feedback
 dataframe_a<-cbind(dataframe_a,positive_feedback)
 dataframe_a$overtime_orders<-ceiling(dataframe_a$orders*dataframe_a$overtime_rate)
 dataframe_a$positive_orders<-ceiling(dataframe_a$orders*dataframe_a$positive_feedback)
-write.csv(dateframe_a,file = "dateframe_a.csv",row.names = FALSE)
+
 dataframe_a$other_orders<-dataframe_a$orders - dataframe_a$overtime_orders - dataframe_a$positive_orders
 
 dataframe_a_orders<-data.frame(dataframe_a$days_since_work,dataframe_a$overtime_orders,dataframe_a$other_orders,dataframe_a$positive_orders)
@@ -195,4 +206,3 @@ geom_text(data=dataframe_a,
 #         plot.title = element_text(size = 15))+
 #   geom_text(data= plot_a,mapping = aes(x=days, y = orders,label = orders), size = 5, colour = 'red',hjust=-0.5)
 
-?nlargest
