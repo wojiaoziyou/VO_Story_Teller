@@ -11,7 +11,7 @@ Date:       May 17, 2021
 import time
 import numpy as np
 import matplotlib.pyplot as plt
-import yaml
+from yaml import full_load
 from os import system, path
 
 np.random.seed(19)
@@ -212,7 +212,7 @@ class StoryTeller(object):
     def InputContent(self):
         if path.isfile(self.contentFile):
             file = open(self.contentFile)
-            content = yaml.full_load(file)
+            content = full_load(file)
             file.close()
             return content
         else:
