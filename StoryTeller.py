@@ -8,11 +8,11 @@ Date:       May 17, 2021
 ===========================================================
 '''
 
-import time
 import numpy as np
 import matplotlib.pyplot as plt
-from yaml import full_load
+from yaml import full_load, dump
 from os import system, path
+from time import time, localtime
 
 np.random.seed(19)
 
@@ -208,15 +208,72 @@ class StoryTeller(object):
         self.content = ""               # All text content （所有文案）
         self.content = self.InputContent()
 
-    # Read 
+    # Read content texts from external file
     def InputContent(self):
         if path.isfile(self.contentFile):
             with open(self.contentFile, "r", encoding="utf-8") as file:
                 content = full_load(file)
             return content
         else:
-            err_en = "Error: Fail to find the content text file '" + self.contentFile + "'."
-            err_ch = "报错：无法找到文案所在文件。"
+            err_en = "Error: Fail to find the content text file '"+self.contentFile+"'."
+            err_ch = "报错：无法找到文案所在文件'"+self.contentFile+"'。"
+            self.ReportError(err_en, err_ch)
+
+    # Save current game process to file
+    def SaveProcess(self, *filename):
+        self.RecordValues()
+        if len(filename) > 0:
+            filename = filename[0]
+        else:
+            currTime = localtime(time())
+            filename = "VO_StoryTeller_"
+            filename += str(currTime.tm_year)
+            filename += "0"*(2-len(str(currTime.tm_mon))) + str(currTime.tm_mon)
+            filename += "0"*(2-len(str(currTime.tm_mday))) + str(currTime.tm_mday)
+            filename += "_"
+            filename += "0"*(2-len(str(currTime.tm_hour))) + str(currTime.tm_hour)
+            filename += "0"*(2-len(str(currTime.tm_min))) + str(currTime.tm_min)
+            filename += "0"*(2-len(str(currTime.tm_sec))) + str(currTime.tm_sec)
+            filename += ".yaml"
+
+        processDict = {}
+        processDict['V_history'] = self.V_history
+        processDict['L_history'] = self.L_history
+        processDict['O_history'] = self.O_history
+        processDict['history'] = self.history
+        processDict['tipFlag'] = self.tipFlag
+        processDict['nameFlag'] = self.nameFlag
+        processDict['isExport'] = self.isExport
+        processDict['isDebug'] = self.isDebug
+
+        try:
+            with open(filename, "w", encoding="utf-8") as file:
+                dump(processDict, file, default_flow_style = False)
+            print("提示：当前游戏进程已存档至文件'"+filename+"'。")
+        except:
+            err_en = "Error: Fail to save current game process to file '"+filename+"'."
+            err_ch = "报错：无法将当前游戏进程存档到文件'"+filename+"'。"
+            print(processDict)
+            self.ReportError(err_en, err_ch)
+
+    # Load saved game process from external file
+    def LoadProcess(self, filename):
+        if path.isfile(filename):
+            with open(filename, "r", encoding="utf-8") as file:
+                processDict = full_load(file)
+
+            self.V_history = processDict['V_history']
+            self.L_history = processDict['L_history']
+            self.O_history = processDict['O_history']
+            self.history = processDict['history']
+            self.tipFlag = processDict['tipFlag']
+            self.nameFlag = processDict['nameFlag']
+            self.isExport = processDict['isExport']
+            self.isDebug = processDict['isDebug']
+            print("提示：已成功读档。")
+        else:
+            err_en = "Error: Fail to find the loading file '"+filename+"'."
+            err_ch = "报错：无法找到存档文件'"+filename+"'。"
             self.ReportError(err_en, err_ch)
 
     # Save current V,L,O value to V,L,O_history list
