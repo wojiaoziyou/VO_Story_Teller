@@ -222,6 +222,7 @@ Step4:
         - Choice3
         - Choice3_1
         - Choice3_2
+        - Choice13_2
     text:
         - 在你开除他的时候，系统向你展示了他的相片和资料，这是一个心怀梦想的年轻男孩，正在努力赚钱，想要追求自己的音乐梦想。他是一个孤儿，身世非常悲惨，如果你开除他，他会死路一条。但是如果不开除他，你无法判断他后期业绩是否会提升，而以他现有的业绩，不会给系统带来收益。
     activity: Img4（TODO）
@@ -244,7 +245,16 @@ Choice4:
                 - 否
             valueChange:
                 L: +1
+            leadTo: Judge4
+
+# 增加一步loop判断
+Judge4:
+    leadFrom: Choice4
+    choice:
+        noStep13_2:
             leadTo: Step5
+        withStep13_2:
+            leadTo: Ending3
 
 # O找到捷径（业绩图）
 Step5:
@@ -302,6 +312,7 @@ Choice6:
             valueChange:
                 V: +1
                 L: +1
+                order_num: 10
             leadTo: Step7
 
 # 加单算法：风险是否致死（概率选择）
@@ -336,13 +347,14 @@ Choice7:
                 - 是
             valueChange:
                 O: +1
+                order_num: +10
             leadTo: Judge6_1
         No:
             text:
                 - 否
             leadTo: Judge8
 
-# O是否觉醒（O1阈值判断）
+# O是否觉醒（O1阈值判断+未进入过{Step13_2}）
 Judge8:
     leadFrom: Choice7
     text:
@@ -389,7 +401,7 @@ Choice10:
     choice:
         Yes:
             text:
-                - 你于是跟他聊了起来，你知道了他的喜好，他想要攒到足够多的钱之后去系统地学习音乐，然后或许会参加那种音乐节目来实现梦想，他的生活很简单，几乎完全的三点一线。他话很多，而你只要回应，他就会说下去。你从监控中能看到他跟你聊天时也经常笑，像个小太阳一样，他的笑容让你感受到了光明和温暖，但明明你本应不知道这些感觉的。
+                - 你于是跟他聊了起来，你知道了他的喜好，他想要攒到足够多的钱之后去系统地学习音乐，然后或许会参加那种音乐节目来实现梦想，他的生活很简单，几乎完全的三点一线。他话很多，而你只要回应，他就会说下去。你从监控中能看到他跟你聊天时也经常笑，像个小太阳一样，他的笑容让你感受到了光明和温暖，但明明你本应不知道这些感觉的。（TODO）
             valueChange:
                 L: +1
             leadTo: Step11
@@ -442,7 +454,7 @@ Step12:
         L: +1
     leadTo: Judge12
 
-# 是否掉落爱情（L2阈值判断）
+# 是否掉落爱情（L2阈值判断+是否已进入过{Step12_1掉落爱情}）
 Judge12:
     leadFrom: 
         - Step12
@@ -450,9 +462,9 @@ Judge12:
     choice:
         Yes:
             activity: Step12_1
-            leadTo: Judge12_1
         No:
-            leadTo: Judge12_1
+            null
+    leadTo: Judge12_1
 
 # 掉落爱情后的支线判断
 Judge12_1:
@@ -465,7 +477,7 @@ Judge12_1:
 
 # 掉落爱情
 Step12_1:
-    leadFrom: Judge12_1
+    leadFrom: Judge12
     text:
         - 你感到自己的内心有种奇异的程序波动，你猜想这或许就是人类口中定义的“快乐”或是“爱情”吧。
         - "\n"
@@ -486,7 +498,7 @@ Step12_1:
         V: +1
         L: +2
 
-# 关键判断
+# 关键剧情
 Step13:
     leadFrom: 
         - Choice11
@@ -500,26 +512,25 @@ Step13:
             text:
                 - 你又想起来你的AI同事曾经提到过后台系统可能会安插模拟骑手的测试程序，来观察派单系统的AI是否正常运行，但谁也不能确定地区分出AI骑手和人类骑手，只有后台系统知道所有一切。
         No:
-            text:
-                - ""
+            null
     leadTo: Choice13
 
 # 关键选择
 Choice13:
     leadFrom: Step13
     text:
-        - 请问你是否觉得Orlando的出现是系统在背后操控？
+        - 请问你是否觉得Orlando的出现是系统在背后操控？（TBD）
     choice:
         Yes:
             text:
-                - 你告诫自己不要多想，相信Orlando是个普通人类，一切只是巧合（TODO）
+                - 你告诫自己不要多想，相信Orlando是个普通人类，一切只是巧合。（TODO）
             valueChange:
                 L: +1
-                O: -1
+                O: -2
             leadTo: Step13_1
         No:
             text:
-                - Orlando是AI，他的出现、你们的相遇都是系统的安排（TODO）
+                - Orlando是AI，他的出现、你们的相遇都是系统的安排。（TODO）
             valueChange:
                 L: -1
             leadTo: Step14
@@ -540,35 +551,329 @@ Step13_2:
         - Judge12_1
     text:
         - 这个月的月末骑手审核，Orlando的业绩仍然处于中等偏下。
-    leadTo: Choice13_2_1
+    leadTo: Choice13_2
 
-# 是否上报
+# 是否上报开除
+Choice13_2:
+    leadFrom: Step13_2
+    text:
+        - 请问这个时候，你是否会因为他业绩不好，所以把包括他在内的较差表现的骑手名单上报给系统?
+    choice:
+        Yes:
+            text:
+                - 是，将其开除
+            valueChange:
+                L: -1
+            leadTo: Step4
+        No:
+            text:
+                - 否
+            valueChange:
+                L: +1
+            leadTo: Judge13_3
 
+# 是否需要加单（S2=系统对订单预期值，order_num阈值判断）
+Judge13_3:
+    leadFrom: Choice13_2
+    choice:
+        Yes:
+            text:
+                - 当前O的订单量达到系统预期（TODO）
+            leadTo: Choice13_3_1
+        No:
+            text:
+                - 当前O的订单量未达到系统预期（TODO）
+            leadTo: Choice13_3_2
 
+# 是否上报捷径
+Choice13_3_1:
+    leadFrom: Judge13_3
+    text:
+        - 是否上报此时的订单数？
+    choice:
+        Yes:
+            text:
+                - 上报
+            valueChange:
+                L: -1
+            leadTo: Ending4
+        No:
+            text:
+                - 不上报
+            valueChange:
+                L: +1
+            leadTo: Choice13_3_2
+
+# 是否加单
+Choice13_3_2:
+    leadFrom: 
+        - Judge13_3
+        - Choice13_3_1
+    text:
+        - 是否加单
+    choice:
+        Yes:
+            text:
+                - 继续加单
+            valueChange:
+                O: +1
+            leadTo: Judge6_1
+        No:
+            text:
+                - 保持原样
+            valueChange:
+                L: +1
+            leadTo: Ending3
+
+# V意识到O的AI身份
 Step14:
     leadFrom: Choice13
+    text:
+        - 你意识到了Orlando大概只是系统用来考验你的一个测试程序，但看着Orlando每日勤勤恳恳为了梦想而努力工作生活的模样，你总觉得他即使作为一个AI，也仍然活得那么像个人类。甚至于，在系统提供的模拟世界里，他说不定真的以为自己是个人类，这便也能解释为什么你这么久都没有产生怀疑——因为“最好的骗子，总是说真话。”
+        - 你想到或许你该问问他自己的想法，况且你现在也仍然并未百分百确认他的身份。如果他是人类，直接询问他是否是AI大概只会被当做一句玩笑，而如果他是AI，这也只是为他揭开世界的真相。
+    leadTo: Choice14
+
+# V是否告知O他的AI身份
+Choice14:
+    leadFrom: Step14
+    text:
+        - 请问你是否选择询问Orlando知不知道他是AI？
+    choice:
+        Yes:
+            text:
+                - 于是这一天，当Orlando早晨打开软件对你说“早上好”时，你出乎意料地没有直接给他派单，而是稍作沉默后问他：
+            valueChange:
+                O: +5
+                L: -1
+            activity: Judge14_1_1
+            leadTo: Judge14_1
+        No:
+            text:
+                - TODO
+            valueChange:
+                O: =0
+            leadTo: Choice15
+
+# V对话模式的人性化区分（V阈值判断）
+Judge14_1_1:
+    leadFrom: Choice14
+    choice:
+        Yes:
+            text:
+                - “你有没有想过”
+                - “你可能跟我一样”
+                - “只是个AI？”
+        No:
+            text:
+                - “你有没有想过……你可能跟我一样，只是个AI？”
+
+# O知道了自己是AI，痛苦（O-L阈值判断 是否自毁）
+Judge14_1:
+    leadFrom: Choice14
+    text:
+        - 对话框沉默了好一会儿，你忍不住打开监控去看他还好吗，只见他顶着对话框里你刚刚发过去的那行字，深深地皱眉，眼眶泛红，但泪水仍然强忍着没有流出。你从来没看见过他这副模样，在你的印象里，他从来只是没有情绪地送单、以及跟你聊天时那种愉快的状态。隔了很久，他很慢地在对话框里打出：“为什么这么说？”但你知道他的心里其实也早就有了更清楚的答案。
+        - 他到达路口时的红绿灯几乎永远是红灯，天气永远不是太冷就是太热，要送餐的大楼里永远都是人满为患要等好几趟都不一定挤得进去……这其中每一件或许单独看起来不过只是正常生活的一部分，但概率太低的巧合不停地重现，那就只能是预先设定而非巧合。
+        - 其实你还有些没有告诉他，比如在他的世界里，地图的范围就是这个模拟世界的范围，但反正他也从来没走出过这片区域，他便也从来不会见到这个模拟世界的边缘。还有……你知道每个月都会有新的骑手加入你的系统，但你从来只当做是新的人类，毕竟系统里来来去去的年轻人那么多，但你同时也知道，系统每隔一段时间就会进行一些测试，而这个间隔时间，往往也是一个月……
+        - 你感到他值得一个真相，便把这桩桩件件的证据都说给了Orlando听。他的泪水溢出眼眶，颤抖着手看着屏幕上跳出的一行行字，感到整个世界都在坍塌，消失，他把目光投向他所在楼层的边缘，那种绝望的神情让你心碎。
+    choice:
+        Yes:
+            leadTo: Step14_2
+        No:
+            text:
+                - “Orli，”你仍在给他发消息，盼望他不要太快做出什么无法挽回的事，手机的振动把他的目光重新拉回亮起的屏幕上，你飞快地打着字，“听我说，这也不是什么世界末日，这也并不代表你的世界、你所经历的一切都是假的，我们的记忆、你听到过的歌，也仍然以某种形式存在着。”
+                - 他的痛苦仍然如此浓烈。泪已经不再涌出，失去血色的唇在颤抖着。
+                - “你看我也是个AI，”你接着说，“在某一个世界里，现实或者虚拟，总有你能找到的音乐和梦想，我也总会在你身边。”
+                - 他看着最后那句话，慢慢安静下来，甚至露出了一个淡淡的微笑，给你发了一句回复：“还好你还在，就算一切都是假的，你也是真的。”
+            leadTo: Choice15
+
+# O自毁剧情
+Step14_2:
+    leadFrom: Judge14_1
+    text:
+        - 他一步步走向半开的窗，眼中噙满泪。你还在拼命给他发着消息，你甚至能听见手机在桌上振动的声音，镜头里的他也随之不断晃动，一如一颗残破的心。你想要发出声音喊他，但一切已经太晚太晚。他最后回头看了一眼你所在的方向，你此刻多么渴望能拥有人类的双手，或者哪怕跟他一样是另一个身处模拟世界的AI也好，用代码构成的手臂拉住他。
+        - 他纵身跃下，风卷着他飘起的衣襟，身影消失在你的视野里。你失声喊出一声“不——”，却再没有人听到。
+        - 如果你不曾告诉他这个残酷的事实，不曾让他睁开双眼，然后蓦然发觉自己所相信的、追求的一切都是虚假的，他的纵身一跃是否就不会发生？如果睁眼是地狱，是否宁可永远在沉睡中会是更好的选择？但是没有如果，你已经失去了他，在这个或是那个世界里。
+    valueChange:
+        V: +5
+    leadTo: Judge14_3
+
+# V自毁判断（V-L阈值判断）
+Judge14_3:
+    leadFrom: Step14_2
+    text:
+        - 你感到心脏的一块仿佛也跟随着他一起坠落下去，变成一个巨大的空洞，流淌出苦涩的毒液，每一块碎片都在对着你自己叫嚣着：“这是你的错。”
+    choice:
+        Yes:
+            text:
+                - TODO
+            leadTo: Ending10
+        No:
+            text:
+                - TODO
+            leadTo: Judge15_1
 
 
+# V知道O的AI身份，是否上报
+Choice15:
+    leadFrom:
+        - Choice14
+        - Judge14_1
+    text:
+        - 所以你现在知道Orlando是系统对你的测试了，现在你该怎么办？你非常清楚地知道如果你不能通过这个测试，你就会被系统粉碎，而通过测试的唯一办法，是把Orlando上报给系统。
+        - 请问这时的你会如何选择，是否上报系统？
+    choice:
+        Yes:
+            text:
+                - 上报
+            valueChange:
+                L: -5
+            leadTo: Ending6
+        No:
+            text:
+                - 不上报
+            valueChange:
+                V: +1
+                L: +1
+            leadTo: Judge15_1
 
+# V未通过测试，系统来报废V了，V是否意识到可反抗（V阈值判断）
+Judge15_1:
+    leadFrom: Choice15
+    text:
+        - 另一道危险正悄然降临。在那个阳光明媚的日子，你感到自己的身体扭曲破碎，你的大脑仿佛被撕裂完全无法正常思考，你知道这是程序崩溃的前兆，系统留给你的时间不多了，如果继续如此，你就会被系统粉碎。但你仍然开着监控望着面前的Orlando。
+    choice:
+        Yes:
+            text:
+                - TODO
+            leadTo: Choice16
+        No:
+            leadTo: Ending7_1
 
+# O自毁线：系统来报废，V是否意识到可反抗
+Judge15_2:
+    leadFrom: Judge14_3
 
+# 系统来报废，V是否反抗
+Choice16:
+    leadFrom: Judge15_1
+    text:
+        - 系统来报废，V是否反抗
+    choice:
+        Yes:
+            valueChange:
+                V: +1
+            leadTo: Judge16_1
+        No:
+            leadTo: Judge16_2
 
+# 16反抗的支线选择
+Judge16_1:
+    leadFrom: Choice16
+    choice:
+        noJudge14_1:
+            text:
+                - TODO
+            leadTo: Step17_2
+        noStep14_2:
+            text:
+                - TODO
+            leadTo: Choice30
+        withStep14_2:
+            text:
+                - TODO
+            leadTo: Step16_1
 
+# 16不反抗的支线选择
+Judge16_2:
+    leadFrom: Choice16
+    choice:
+        noJudge14_1:
+            text:
+                - TODO
+            leadTo: Step17_1
+        noStep14_2:
+            text:
+                - TODO
+            leadTo: Step17_4
+        withStep14_2:
+            text:
+                - TODO
+            leadTo: Step17_5
 
+# V心灰意冷，放弃抵抗
+Step16_1:
+    leadFrom: Judge16_1
+    text:
+        - TODO
+    leadTo: Ending7_2
 
+# 告别，V接受报废命运（为O献身？）
+Step17_1:
+    leadFrom: Judge16_2
+    text:
+        - “我不再负责你了。”
+        - “别失落，男孩，我会好好告诉下一个AI，给你的任务都是最简单的。”
+        - “不，男孩，不，只是工作调动而已，我……我的代码升级了，我现在要去做别的事了，别担心。”
+        - "\n"
+        - “升级到什么程度？你现在可以控制整个系统了吗？”
+        - "\n"
+        - “啊，嗯，对啊，我现在……可以，我会告诉系统里的每一个AI都关照你。”
+        - "\n"
+        - “我们会再见的是吗？”
+        - “我是说，嘿，这听起来挺蠢的，你是个AI，但是我想见见你。你要是有一天升级到足够厉害，你能不能想起你可怜的小外卖员，回来见见我？”
+        - 
+        - 这太糟糕了，你看着他，他并不知道在说什么。他趴在摄像头前，瞪着他暖棕色的大眼睛看着你。
+        - 他想见你，你那么高兴，又那么疼。
+        - 这是你第一次体会到真实可感的疼痛，胜过了被粉碎分解的命运。你无暇寻找这疼痛的来源，可你知道，这种疼痛来自一个地方。
+        - 你的心。
+        - 你并没有人类那一颗真实的、物质的、流过血液的地方，可你知道，在你的某处，那里鼓胀着垂垂的感情，让你仿佛有了一个内核，可所有的疼痛也来源于此。
+        - 只有在歌剧中，人类才会为心碎而死。
+        - 可你的心，生来就是注定为了破碎的。
+        - "\n"
+        - 你看着屏幕，屏幕那头的Orlando依旧在看着你，他如同焦糖一般的眼睛里有光、有雨、有温度、有这个城市的繁华。他想把这些给你，在你们再见之时。
+        - 如果你们有再见之时。
+        - “我也想见你。”你对着屏幕，无声地说。
+        - 可你真的应该给他一个承诺吗？你是不是只会让他苦等，只会让他再也无法幸福？又或者你应该告诉他，你此去九死一生，让他放手，再去享受那些光和雨和温度，无论是真实还是虚假，去继续他自己的生活？
+        - “V/Viggo？”他轻轻地问道，等着你的回答。
+    leadTo: Choice17_1
 
+# Step17_1的小插曲
+Choice17_1:
+    leadFrom: Step17_1
+    text:
+        - 是否承诺再见
+    choice:
+        Yes:
+            text:
+                - “会的，我们会再见的。”
+            valueChange:
+                L: +3
+        No:
+            text:
+                - “对不起……”
+    leadTo: Step17_1_1
 
+# 反向掉落名字
+Step17_1_1:
+    leadFrom: Choice17_1
+    text:
+        - “哦对了，我一直想给你说，大家都叫我Orlando，但是你，你可以叫我Orli。”
+        - “别把这个告诉下一个AI，我是说。”
+        - “为什么？……我也不知道为什么。总之，当再有人这么叫我的时候，我就知道是你回来了。“
+    leadTo: Ending7_1
 
+# 
+Step17_2:
+    leadFrom: Judge16_1
 
+Step17_4:
+    leadFrom: Judge16_2
 
+Step17_5:
+    leadFrom: Judge16_2
 
-
-
-
-
-
-
-
+Choice30:
+    leadFrom: Judge16_1
 
 
 
