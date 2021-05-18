@@ -1,4 +1,8 @@
 library(ggplot2)
+library(reshape2)
+install.packages(reshape2)
+library(ggthemes)
+
 
 ##create number
 
@@ -109,9 +113,10 @@ ggplot(data = plot_day_7,mapping = aes(x=number, y = orders))+
         panel.grid.minor = element_blank(),
         panel.background=element_rect(colour = "black",size = 1,fill = "white"),
         axis.line = element_line(color = "black"),
-        axis.text.x = element_text(angle = 45, hjust = 0.5, vjust = 0.5),
+        axis.text.x = element_text(angle = 45, hjust = 0.5, vjust = 0.5, size = 15),
+        axis.text.y = element_text( size = 15),
         legend.position = "none")+
-  geom_text(mapping = aes(label = number), size = 5, colour = 'orange', vjust = 0.5,hjust=0.5,angle=45)
+  geom_text(mapping = aes(label = orders), size = 5, colour = 'orange', vjust =-0.5,hjust=0.5)
 
 ##create the plot for each delivery guys
 
@@ -126,24 +131,68 @@ colnames(days_frame_t)<-days_frame_t[1,]
 days_frame_t<-days_frame_t[-1,]
 
 
-a<-15 ##input the delivery guy 
+a<-2 ##input the delivery guy 
 
-plot_a<-data_frame(orders_t$days,orders_t[,a],days_frame_t[,a])
-colnames(plot_a)<-c('days','orders','days_since_work')
+dataframe_a<-data.frame(orders_t$days,orders_t[,a],days_frame_t[,a])
+colnames(dataframe_a)<-c('days','orders','days_since_work')
+overtime_rate<-rnorm(7,0.1,0.001)
+dataframe_a<-cbind(dataframe_a,overtime_rate)
+positive_feedback<- (1 - overtime_rate)*rnorm(1,0.8,0.0001)
+positive_feedback
+
+dataframe_a<-cbind(dataframe_a,positive_feedback)
+dataframe_a$overtime_orders<-ceiling(dataframe_a$orders*dataframe_a$overtime_rate)
+dataframe_a$positive_orders<-ceiling(dataframe_a$orders*dataframe_a$positive_feedback)
+write.csv(dateframe_a,file = "dateframe_a.csv",row.names = FALSE)
+dataframe_a$other_orders<-dataframe_a$orders - dataframe_a$overtime_orders - dataframe_a$positive_orders
+
+dataframe_a_orders<-data.frame(dataframe_a$days_since_work,dataframe_a$overtime_orders,dataframe_a$other_orders,dataframe_a$positive_orders)
+colnames(dataframe_a_orders)<-c('days','overtime_orders',"other_orders","positive_orders")
+
+plot_a<-melt(dataframe_a_orders,id.vars = 'days',variable.name =  'various',value.name="orders")
 plot_a
-ggplot(data = plot_a,mapping = aes(x=days, y = orders))+
-  geom_bar(stat = 'identity', fill= 'blue')+
-  labs(y="Orders")+
+
+
+ggplot()+
+  geom_bar(data = plot_a,mapping = aes(x=days, y = orders,fill=factor(various)),stat = 'identity',position = 'stack')+
+  labs(y="Orders" )+
+  ggtitle(paste0("Orders taken by ",colnames(orders_t)[a]," in last 7 days"))+
   ylim(0,60)+
-  scale_x_continuous('Days', 
-                     breaks = seq(1,7,1),  
-                     trans = 'reverse')+
+  scale_x_continuous('Days Since Joining',
+                     breaks = seq(max(plot_a$days)-7,max(plot_a$days),1))+
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background=element_rect(colour = "black",size = 1,fill = "white"),
         axis.line = element_line(color = "black"),
         axis.text.x = element_text( hjust = 0.5, vjust = 0.5,size = 15),
-        legend.position = "none")+
-  geom_text(mapping = aes(label = days_since_work), size = 5, colour = 'red',hjust=-0.5)+
-  coord_flip() 
+        axis.text.y = element_text( size = 15),
+        plot.title = element_text(size = 15))+
+  geom_text(data=dataframe_a,
+              mapping = aes(x=days_since_work, y = orders,label = orders), size = 5, colour = 'black',vjust = -1)+
+  geom_text(data=dataframe_a,
+            mapping = aes(x=days_since_work, y = positive_orders,label = positive_orders), size = 5, colour = 'black',vjust = 1)+
+geom_text(data=dataframe_a,
+          mapping = aes(x=days_since_work, y = positive_orders + other_orders,label = other_orders), size = 5, colour = 'black', vjust = 0.5 )
 
+# ggplot()+
+#   geom_line(data = plot_a,aes(x=days, y = orders, colour = 'orders'),stat = 'identity')+
+#   geom_line(data = plot_a,aes(x=days, y = (1-overtime_rate)*50, colour = 'overtime rate'),stat = 'identity')+
+#   geom_line(data = plot_a,aes(x=days, y = positive_feedback*50, colour = 'positive feedback'),stat = 'identity')+
+#   labs(y="Orders" )+
+#   ggtitle(paste0("Orders taken by ",colnames(orders_t)[a]," in last 7 days"))+
+#   scale_y_continuous('Orders', 
+#                      breaks = seq(0,70,10),
+#                      limits = c(0,55))+
+#   scale_x_continuous('Days', 
+#                      breaks = seq(1,7,1),
+#                      trans = 'reverse')+
+#   theme(panel.grid.major = element_blank(),
+#         panel.grid.minor = element_blank(),
+#         panel.background=element_rect(colour = "black",size = 1,fill = "white"),
+#         axis.line = element_line(color = "black"),
+#         axis.text.x = element_text( hjust = 0.5, vjust = 0.5,size = 15),
+#         axis.text.y = element_text( size = 15),
+#         plot.title = element_text(size = 15))+
+#   geom_text(data= plot_a,mapping = aes(x=days, y = orders,label = orders), size = 5, colour = 'red',hjust=-0.5)
+
+?nlargest
