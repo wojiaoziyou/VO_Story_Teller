@@ -1,0 +1,421 @@
+# -*- coding: utf-8 -*-
+### 
+### =================== License Information ===================
+### Author:     June Sirius, Unitary Operator
+### Version:    Ver 8.5
+### Date:       May 17, 2021
+### ===========================================================
+
+# 开局
+Step0:
+    text:
+        - 早上好，5-1000！
+        - 你从休眠中睁开眼睛，绿色的代码从你面前流动而过，如同晨起逐渐流向肢体的意识。但你可不能像个真正的人类一样赖床太久。这是个讲求效率的世界，事实上，你要做的恰好是要让这个世界更有效率。
+        - 别紧张，你可不是要做什么经天纬地的大事。不过你的工作虽然渺小，却也一样重要。你服务于一家外卖公司，作为一个高级人工智能，你下属于公司的智能系统，工作包括给骑手们派单，分配路线，调整他们的工作。好吧，这听起来有点无趣，但是想想看，就想象这样的场景吧，无数外卖员们在你的调度下奔向取餐点，取到热气腾腾的外卖，再被送到饥肠辘辘的顾客手心。而外卖员们骑着他们的单车，承载着城市的温度，代表着城市的速度，穿过阳光雨露。尽管你没有走出过监控室，你也不难想象到，这份职业让多少人解决了就业，多少家庭获得了温饱，多少孩子走向了梦想。最重要的是，每有一单，就会有一笔小小的收益流向公司，积少成多，公司就可以帮助更多的人。而你，就背负着能让公司获得更多收益的责任。现在你还觉得自己的工作无关紧要吗？
+        - 开始吧，让世界更快，让公司更好吧。5-1000，你做好准备了吗？
+    leadTo: Step1
+
+# V的自我认知、兴趣爱好
+Step1:
+    leadFrom: Step0
+    text:
+        - 不过在工作之前，你可以选择放松一下，毕竟这是一家人性化的公司，而你可是个独一无二的AI。所以为何不充分利用系统提供的各种可能性，来培养一些只属于你的兴趣爱好呢？
+    leadTo: Choice1_1
+
+# 是否与同事闲聊
+Choice1_1:
+    leadFrom: Step1
+    text:
+        - 你是否要跟同事闲聊几句？
+    choice:
+        Yes:
+            text:
+                - 是
+            valueChange:
+                V: +1
+            activity: Judge1_1
+        No:
+            text:
+                - 否
+    leadTo: Choice1_2
+
+# 是否获得【测试骑士】消息（概率选择）
+Judge1_1:
+    leadFrom: Choice1_1
+    choice:
+        Yes:
+            text:
+                - 【测试骑手】你的AI同事传来了一段代码，你扫了一眼，原来系统又要指派新的测试骑手了。这些骑手看起来像是人类，数据跟人类也没什么区别，只是他是系统专门用来测试你们这些AI的。系统曾经说过，如果不能成功通过测试的AI都要被销毁，不过你对自己还是很有信心的。
+        No:
+            text:
+                - 你的同事不想跟你闲聊，你回到了系统
+
+# 是否听音乐
+Choice1_2:
+    leadFrom: Choice1_1
+    text:
+        - 早上好，5-1000，今天是否也要听着你最喜欢的音乐开始工作呢？
+    choice:
+        Yes:
+            text:
+                - 是
+            valueChange:
+                V: +2
+                L: +1
+        No:
+            text:
+                - 否
+    leadTo: Choice1_3
+
+# 是否看画
+Choice1_3:
+    leadFrom: Choice1_2
+    text:
+        - 弹出一条推送，你是否要观看今日推荐的名画《奥菲利亚》？
+    choice:
+        Yes:
+            text:
+                - 是
+            valueChange:
+                V: +1
+        No:
+            text:
+                - 否
+    leadTo: Choice1_4
+
+# 是否读诗
+Choice1_4:
+    leadFrom: Choice1_3
+    text:
+        - 系统根据你停留在诗歌的页面时间较长为你推荐了新的公众号“赛博之诗”，是否取消订阅？
+    choice:
+        Yes:
+            text:
+                - 是
+            valueChange:
+                V: +1
+        No:
+            text:
+                - 否
+    leadTo: Step2
+
+# 业绩直方图
+Step2:
+    leadFrom: Choice1_4
+    text:
+        - 是时候开始工作了，你拿到了由你负责的所有骑手的昨日表现报告，你的任务是为他们规划合理的送单量，并将值得奖惩的骑手名单上报给系统。
+        - 如果上报优秀骑手，他们可能获得嘉奖，奖金将从系统利润中扣除；如果上报不能给系统带来收益的骑手，你有权力进一步查看他们的情况，并向系统建议是否将他们开除。
+    activity: Img2（TODO）
+    leadTo: Choice2
+
+# 选择重点关注的外卖员
+Choice2:
+    leadFrom: Step2
+    text:
+        - 请问你会奖惩哪些骑手？
+    choice:
+        listInclude:
+            leadTo: Step3
+        listExclude:
+            leadTo: Ending1
+
+# 业绩直方图-2
+Step3:
+    leadFrom: Choice2
+    text:
+        - TODO
+    activity: Img3（TODO）
+    leadTo: Choice3
+
+# 是否开除
+Choice3:
+    leadFrom: Step3
+    text:
+        - 你是否确定开除所选择的骑手？或你可以选择将某人在开除名单中移除？
+    choice:
+        yes:
+            text:
+                - 确定开除
+            valueChange:
+                L: -2
+            leadTo: Step4
+        No:
+            text:
+                - 不开除
+            valueChange:
+                L: +1
+            leadTo: Choice3_1
+
+# 是否继续开除
+Choice3_1:
+    leadFrom: Choice3
+    text:
+        - 好吧，0113号，他是第一天开始业务，或许值得一个适应期。现在系统已经把他加入了你的特别关注列表里，你每天都会收到关于0113号的特殊提醒。
+        - 一个星期过去了，0113号的业绩的确提升了一些，可以看得出他的确在努力，但是比起其他骑手，他的业绩依旧是太差了。最糟糕的是，他今天弄撒了顾客的汤，顾客投诉了他，还给他打了一星，系统也不得不赔偿了顾客。他给系统带来了损失，这真的糟透了。
+        - 请问你是否上报系统，将其开除？
+    choice:
+        Yes:
+            text:
+                - 是
+            valueChange:
+                L: -2
+            leadTo: Step4
+        No:
+            text:
+                - 否
+            valueChange:
+                L: +1
+            leadTo: Choice3_2
+
+# 是否继续开除
+Choice3_2:
+    leadFrom: Choice3_1
+    text:
+        - 好吧，或许这个0113号还值得你更多的关注，只是但愿你的关注能有所回报。
+        - 可是你获得的回报，看看吧，现在他已经入职两周了，却还是业绩最差的那个，而且差评不断。哦不，就在此刻，他竟然被客户投诉了。
+        - “还能到了地方一直不派送，我真的服了，这已经不是差评的问题了，我看你们是故意想把顾客饿死，我一会就要卸载app。最后一条评价，我要告诉我身边的每一个人，千万不要再在你们平台上点外卖，又慢又贵！”
+        - 即使面对那么多挑剔的顾客，你也很少见到这么严厉的投诉。你快速调看了一下系统提供的信息，0113号的这一单已经超时一个小时了。但GPS显示他明明按时到达了目的地附近，却一直没有派单。
+        - 顾客提出了要卸载app并差评，这已经对系统的利益造成了严重的损害。如果你再不上报系统，开除0113，自身都有可能作为不合格的AI被系统销毁。但是0113的行为的确极其反常，或许你还可以再观察他一下？
+        - 请问你是否上报系统，开除0113？
+    choice:
+        Yes:
+            text:
+                - 是，将其开除
+            valueChange:
+                L: -2
+            leadTo: Step4
+        No:
+            text:
+                - 否
+            valueChange:
+                L: +1
+            leadTo: Choice3_3
+
+# 个性化语音指路
+Choice3_3:
+    leadFrom: Choice3_2
+    text:
+        - 你查看了一下该单顾客的小区地图，立刻就明白了过来。这栋建筑的内部结构极为复杂，而GPS只能显示平面定位，这大概就是为什么0113显示到达位置却没有派送。
+        - 你突然想起，你其实可以向0113提供个性化语音指引，帮助他确定三维定位，为他单独指导路线。
+        - 但是你从没使用过这个功能，毕竟这太耗时了，不符合你高效的原则。况且就算送到这一单，顾客也不一定会删除评论，损失已经造成了，而你还有好多其他订单需要分配给别的外卖员们。
+        - 你是否在对话框里给0113个性化的指引？
+    choice:
+        Yes:
+            text:
+                - “0113，你好，我是派单AI。”
+                - “我注意到本单已经超时很久，而你的位置并没有错误，现在为你提供个性化语音导路。请在确认自己的楼层后，走向大楼西南角，乘坐C电梯至15楼后转向东南角，乘坐E电梯……”
+                - 过了几秒，你荧幕上的圆点动了起来，你把分辨率调到最大，看着那个小点按照你的指引穿梭在复杂的迷宫里。
+                - 终于，派送完成的提示音响起。一个半小时，这是你有史以来经手过的最长的派单时间。你看着面前的圆点，他一直没有移动。他在干什么呢？
+                - 叮的一声，系统提示，刚才顾客的投诉被删除了。或许他终于得到了顾客的谅解吧。你尝试着，又给他派了一单，这次的目的地简单多了。
+                - 两秒钟后，系统提示，他接下了新的一单，荧幕上的圆点快速移动着，奔向了下一个目的地。
+            valueChange:
+                L: +1
+                O: +2
+        No:
+            text:
+                - 送单任务没有完成，不过反正客户也已经投诉了，除了0113的业绩进一步下降了，没有任何损失
+    leadTo: Step5
+
+# 开除流程（简历）
+Step4:
+    leadFrom:
+        - Choice3
+        - Choice3_1
+        - Choice3_2
+    text:
+        - 在你开除他的时候，系统向你展示了他的相片和资料，这是一个心怀梦想的年轻男孩，正在努力赚钱，想要追求自己的音乐梦想。他是一个孤儿，身世非常悲惨，如果你开除他，他会死路一条。但是如果不开除他，你无法判断他后期业绩是否会提升，而以他现有的业绩，不会给系统带来收益。
+    activity: Img4（TODO）
+    leadTo: Choice4
+
+# 开除决策
+Choice4:
+    leadFrom: Step4
+    text:
+        - 你是否继续开除？
+    choice:
+        Yes:
+            text:
+                - 是
+            valueChange:
+                L: -1
+            leadTo: Ending2
+        No:
+            text:
+                - 否
+            valueChange:
+                L: +1
+            leadTo: Step5
+
+# O找到捷径（业绩图）
+Step5:
+    leadFrom:
+        - Choice3_3
+        - Choice4
+    text:
+        - 由于你留下了这个年轻人，他进入了你的特别关注里，你知道了他除了跑单员代号外的名字，叫做Orlando Bloom。又过了一天，你照例开始工作，给他派了不多的单，但你发现今天Orlando的送单速度突然有了大幅度提高。
+    activity: Img5（TODO）
+    valueChange:
+        O: +1
+    leadTo: Choice5
+
+# 是否打开监控
+Choice5:
+    leadFrom: Step5
+    text:
+        - 请问你是否通过监控去查看这个年轻人是如何提高自己的速度的？
+    choice:
+        Yes:
+            text:
+                - 看到O模样（TODO）
+                - 你看到Orlando在路上骑得飞快，虽然依旧是按照你规划的路线前进，但是说真的，他好像骑得有点太快了
+            valueChange:
+                V: +2
+                L: +5
+        No:
+            text:
+                - 否（TODO）
+            valueChange:
+                L: -1
+    leadTo: Step6
+
+# 发现O的捷径
+Step6:
+    leadFrom: Choice5
+    text:
+        - 你疑惑不解地检查了Orlando电动车的数据，发现每公里的行驶速度超过了系统的限定速度——他电动车的限速系统坏了！
+        - 好处是，他现在可以骑得更快了，所以他能够接到更多的单，更快的送达，按照现在的速度，他的接单能力也提升了。
+        - 但是不好之处是，现在他在路上的危险性也增加了。
+        - 不过如果你上报系统，系统可以更改所有骑手的限速速度，这样能够让每一个骑手都接到更多的单，系统的利润会增加，他们每个人的收入也会增加，而且Orlando的行为看起来也不是那么违规了。坏处是，危险当然会增加，而且Orlando也可能又会变成地区的最后一名。
+    leadTo: Choice6
+
+# 是否上报捷径
+Choice6:
+    leadFrom: Step6
+    text:
+        - 请问你是否将这个提升收入方案上报系统？
+    choice:
+        Yes:
+            valueChange:
+                L: -1
+            leadTo: Ending4
+        No:
+            valueChange:
+                V: +1
+                L: +1
+            leadTo: Step7
+
+# 加单算法：风险是否致死（概率选择）
+Judge6_1:
+    leadFrom: Choice7
+    choice:
+        Yes:
+            text:
+                - 加单致死（TODO）
+            leadTo: Ending5
+        No:
+            text:
+                - 加单不致死，业绩排名上升（TODO）
+            leadTo: Choice6
+
+# 加单决策（当日业绩统计图）
+Step7:
+    leadFrom: Choice6
+    text:
+        - 现在Orlando送单比以前快多了，他的送单能力大幅度提升
+    activity: Img7（TODO）
+    leadTo: Choice7
+
+# 是否加单
+Choice7:
+    leadFrom: Step7
+    text:
+        - 你是否选择给他加单？
+    choice:
+        Yes:
+            text:
+                - 是
+            valueChange:
+                O: +1
+            leadTo: Judge6_1
+        No:
+            text:
+                - 否
+            leadTo: Judge8
+
+# O是否觉醒（O1阈值判断）
+Judge8:
+    leadFrom: Choice7
+    text:
+        - 在你的安排下，Orlando的接单数目稳定在比平均值略低的一个数量，而且他利用那条捷径基本可以实现及时送达。他的收入虽然仍然不高，但他有了一些空闲时间。
+    choice:
+        Yes:
+            text:
+                - TODO
+            leadTo: Step9
+        No:
+            text:
+                - TODO
+            leadTo: Step13_2
+
+# O练歌
+Step9:
+    leadFrom: Judge8
+    text:
+        - 有一次在他提前到达取餐点等待店家出餐的时间里，路边有一个街头歌手在自弹自唱，Orlando甚至跟他合唱了一曲。
+    valueChange:
+        O: +1
+    leadTo: Judge9
+
+# O是否开启聊天（L1阈值判断）
+Judge9:
+    leadFrom: Step9
+    choice:
+        Yes:
+            leadTo: Choice10
+        No:
+            leadTo: Step13_2
+
+Step13_2:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

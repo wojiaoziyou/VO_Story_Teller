@@ -1,0 +1,39 @@
+# d=30
+orders_expected<-40
+time_expected<-12/orders_expected
+income_each_expected<-8
+income_expected<-orders_expected*income_each_expected
+
+orders_safe<-38
+time_safe<-12/orders_safe
+income_each_saft<-(8-(time_safe-time_expected))
+income_saft<-income_each_saft*orders_safe
+
+#risk
+
+risk_rate_safe<-0.001
+risk_safe<-(1-(1-risk_rate_safe)^orders_safe)*100
+risk_rate_expected<-risk_rate_safe-(time_expected - time_safe)/1000
+risk_expected<-(1-(1 - risk_rate_expected)^orders_safe)*100
+
+#actual risk
+x<-seq(0,100,length = 100)
+orders_acutal<-10 + x 
+time_actual<- 12 / orders_acutal
+plot(x,orders_acutal)
+plot(x,time_actual)
+risk_rate_actual<-ifelse(12/(10+x)>time_safe, 
+                         risk_rate_safe,
+                         risk_rate_safe - (12/(10+x) - time_safe)/10
+)
+plot(x,risk_rate_actual)
+risk_actual<- (1 - (1 - risk_rate_actual)^orders_acutal)*100
+plot(x,risk_actual,type = 'l')
+
+#actual incomes
+income_actual<-ifelse(orders_acutal > orders_expected,
+                      80 * tanh((orders_acutal - 40) / 20) + 320,
+                      ( 8 -50 ^ ( time_actual - time_expected))* orders_acutal)/10
+                      
+plot(orders_acutal,income_actual,type = 'l')
+
