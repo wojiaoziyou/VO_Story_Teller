@@ -211,9 +211,8 @@ class StoryTeller(object):
     # Read 
     def InputContent(self):
         if path.isfile(self.contentFile):
-            file = open(self.contentFile)
-            content = full_load(file)
-            file.close()
+            with open(self.contentFile, "r", encoding="utf-8") as file:
+                content = full_load(file)
             return content
         else:
             err_en = "Error: Fail to find the content text file '" + self.contentFile + "'."
