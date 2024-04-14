@@ -9,7 +9,7 @@
 # 开局
 Step_0:
     text:
-        - 早上好，5-1000！
+        - 早上好，{v_name}！
         - <br>
         - 你从休眠中睁开眼睛，绿色的代码从你面前流动而过，如同晨起逐渐流向肢体的意识。
         - 但你可不能像个真正的人类一样赖床太久。
@@ -26,7 +26,7 @@ Step_0:
         - 现在你还觉得自己的工作无关紧要吗？
         - <br>
         - 开始吧，让世界更快，让公司更好吧。
-        - 5-1000，你做好准备了吗？
+        - {v_name}，你做好准备了吗？
     lead_to: Choice_1
 
 # V的自我认知、兴趣爱好
@@ -39,8 +39,9 @@ Choice_1:
         - Choice_1_3
         - Choice_1_4
     text:
-        - 不过在工作之前，你可以选择放松一下，毕竟这是一家人性化的公司，而你可是个独一无二的AI。
+        - 不过在工作之前，你有三分钟的时间可以放松一下，毕竟这是一家人性化的公司，而你可是个独一无二的AI。
         - 所以为何不充分利用系统提供的各种可能性，来培养一些只属于你的兴趣爱好呢？
+        - 不过时间有限，你最多选择三项，当然也可以选择不做任何事情。
     options:
         option_1:
             text:
@@ -73,6 +74,8 @@ Choice_1_1:
         option_1:
             text:
                 - 是
+            value_change:
+                activity_cnt: +1
             lead_to: Judge_1_1
         option_2:
             text:
@@ -86,19 +89,38 @@ Judge_1_1:
     condition: "D20"
     options:
         option_1:
-            condition: "D20>10"
+            condition: "D20 <= 13"
             text:
-                - 【测试骑手】你的AI同事传来了一段代码，你扫了一眼，原来系统又要指派新的测试骑手了。
+                - 你的AI同事传来了一段名为【测试骑手】的代码，你扫了一眼，原来系统又要指派新的测试骑手了。
                 - 这些骑手看起来像是人类，数据跟人类也没什么区别，只是他是系统专门用来测试你们这些AI的。
                 - 系统曾经说过，如果不能成功通过测试的AI都要被销毁，不过你对自己还是很有信心的。
             value_change:
                 tip_flag: True
                 v_intelligence: +1
-            lead_to: Choice_1
-        No:
-            condition: "D20<=10"
+            lead_to: Judge_1_2
+        option_2:
+            condition: "D20 > 13"
             text:
-                - 你的同事不想跟你闲聊，你回到了系统。
+                - 你的同事们都没有回应你，你回到了系统。
+            lead_to: Judge_1_2
+
+Judge_1_2:
+    lead_from:
+        - Judge_1_1
+        - Step_1_2
+        - Step_1_3
+        - Step_1_4
+    condition: {activity_cnt}
+    options:
+        option_1:
+            condition: "{activity_cnt} == 3"
+            text:
+                - 放松时间结束，是时候开始工作了。
+            lead_to: Step_2
+        option_2:
+            condition: "{activity_cnt} < 3"
+            text:
+                - 你还有时间可以选择更多的活动。
             lead_to: Choice_1
 
 # 是否听音乐
@@ -112,15 +134,24 @@ Choice_1_2:
             text:
                 - 是
             value_change:
-                v_intelligence: +2
-                v_love: +1
-                o_love: +1
-                music_flag: True
-            lead_to: Choice_1
-        No:
+                activity_cnt: +1
+            lead_to: Step_1_2
+        option_2:
             text:
                 - 否
             lead_to: Choice_1
+
+Step_1_2:
+    lead_from:
+        - Choice_1_2
+    text:
+        - 轻柔的音乐在你的后台工作间响起，起伏的旋律和绿色的代码交织在一起，让你感到充满干劲。
+    value_change:
+        v_intelligence: +2
+        v_love: +1
+        o_love: +1
+        music_flag: True
+    lead_to: Judge_1_2
 
 # 是否看画
 Choice_1_3:
@@ -133,13 +164,26 @@ Choice_1_3:
             text:
                 - 是
             value_change:
-                v_intelligence: +1
-                painting_flag: True
-            lead_to: Choice_1
-        No:
+                activity_cnt: +1
+            lead_to: Step_1_3
+        option_2:
             text:
                 - 否
             lead_to: Choice_1
+
+Step_1_3:
+    lead_from:
+        - Choice_1_3
+    text:
+        - [奥菲利亚]
+        - 画作在你面前铺展开，你知道这是来自《哈姆雷特》的故事：
+        - “她的衣服四散展开，使她像人鱼一样漂浮在水上，她嘴里还断断续续地唱着古老的歌谣，好像一点不感觉到处境险恶，又好像她本来就是生长在水中一般。”
+        - 奥菲利亚终于摆脱了罪恶深重的尘世，漂向无忧的净境。
+        - 画面充满了诗意，你认真欣赏了一会儿。
+    value_change:
+        v_intelligence: +1
+        painting_flag: True
+    lead_to: Judge_1_2
 
 # 是否读诗
 Choice_1_4:
@@ -152,13 +196,39 @@ Choice_1_4:
             text:
                 - 是
             value_change:
-                v_intelligence: +1
-                poetry_flag: True
-            lead_to: Choice_1
+                activity_cnt: +1
+            lead_to: Step_1_4
         option_2:
             text:
                 - 否
             lead_to: Choice_1
+
+Step_1_4:
+    lead_from:
+        - Choice_1_4
+    text:
+        - 「太阳不知疲倦
+        - 夜晚同样
+        - 我再三踟蹰
+        - 想象却皱起眉 空乏一物
+        - <br>
+        - 你飞进天空的树影
+        - 飞进雾做的海 飞进繁星
+        - 你迷路在人群里了
+        - 正如旧时的安逸
+        - <br>
+        - 而生是萍水相逢
+        - 在不提防的时候将临
+        - 你和我一同住在我的梦里
+        - 偶然的梦
+        - <br>
+        - 这样的肆意并不常见
+        - 用一天经历一世的欢喜」
+        - （作者：微软小冰）
+    value_change:
+        v_intelligence: +1
+        poetry_flag: True
+    lead_to: Judge_1_2
 
 # 业绩直方图
 Step_2:
@@ -167,6 +237,7 @@ Step_2:
     text:
         - 是时候开始工作了，你拿到了由你负责的所有骑手的昨日表现报告，你的任务是为他们规划合理的送单量，并将值得奖惩的骑手名单上报给系统。
         - 如果上报优秀骑手，他们可能获得嘉奖，奖金将从系统利润中扣除；如果上报不能给系统带来收益的骑手，你有权力进一步查看他们的情况，并向系统建议是否将他们开除。
+        - 请注意，系统已经为你标注了昨日送单量前三名和末三名的骑手。
         - [业绩直方图]
     lead_to: Choice_2_1
 
@@ -238,21 +309,27 @@ Choice_2_1:
             value_change:
                 reward_cnt: +1
             lead_to: Judge_2_1
+        option_11:
+            text:
+                - 不奖励更多骑手了
+            value_change:
+                reward_cnt: +3
+            lead_to: Judge_2_1
 
 Judge_2_1:
     lead_from:
         - Choice_2_1
-    condition: "reward_cnt"
+    condition: {reward_cnt}
     options:
         option_1:
-            condition: "reward_cnt == 3"
+            condition: "{reward_cnt} >= 3"
             text:
-                - 你选择了三位骑手，他们的业绩都非常优秀，你为他们上报了系统，他们将会获得奖励。
+                - 你选择了业绩优秀的骑手，为他们上报了系统，他们将会获得奖励。
             value_change:
                 v_intelligence: +1
             lead_to: Choice_2_2
         option_2:
-            condition: "reward_cnt < 3"
+            condition: "{reward_cnt} < 3"
             text:
                 - 还可以继续选择优秀骑手进行奖励。
             lead_to: Choice_2_1
@@ -325,32 +402,39 @@ Choice_2_2:
             value_change:
                 punish_cnt: +1
             lead_to: Judge_2_2
+        option_11:
+            text:
+                - 不关注更多骑手了
+            value_change:
+                punish_cnt: +3
+            lead_to: Judge_2_2
 
 Judge_2_2:
     lead_from:
         - Choice_2_2
-    condition: "punish_cnt"
+    condition: {punish_cnt}
     options:
         option_1:
-            condition: "punish_cnt < 3"
+            condition: "{punish_cnt} < 3"
             text:
                 - 还可以继续选择表现不佳的骑手进行关注。
             lead_to: Choice_2_2
         option_2:
-            condition: "punish_cnt == 3 and attention_flag is False"
+            condition: "{punish_cnt} >= 3 and {attention_flag} is False"
             text:
-                - 你选择了三位业绩不佳的骑手，你为他们上报了系统，他们将会被重点关注。
+                - 你选择了业绩不佳的骑手，为他们上报了系统，他们将会被重点关注。
                 - <br>
-                - 但你似乎没有发现真正需要关注的骑手，你的选择可能会影响到你的工作。
+                - 但你似乎没有发现真正需要关注的骑手。
             lead_to: Ending_1
         option_3:
-            condition: "punish_cnt == 3 and attention_flag is True"
+            condition: "{punish_cnt} >= 3 and {attention_flag} is True"
             text:
-                - 你选择了三位业绩不佳的骑手，你为他们上报了系统，他们将会被重点关注。
+                - 你选择了业绩不佳的骑手，为他们上报了系统，他们将会被重点关注。
             value_change:
                 v_intelligence: +1
             lead_to: Step_3
 
+# 开除前的观察
 # 业绩直方图-2
 Step_3:
     lead_from:
@@ -387,10 +471,10 @@ Step_4:
         - Choice_3_2
         - Choice_13_2
     text:
-        - 在你开除他的时候，系统向你展示了他的相片和资料。
+        - 在你上报建议开除他的时候，系统向你展示了他的相片和资料。
         - 这是一个心怀梦想的年轻男孩，正在努力赚钱，想要追求自己的音乐梦想。
         - 他是一个孤儿，身世非常悲惨，如果你开除他，他或许会因为失去唯一谋生手段而死路一条。
-        - 但是如果不开除他，你无法判断他后期业绩是否会提升，而以他现有的业绩，不会给系统带来收益。
+        - 但是如果不开除他，你无法判断他后期业绩是否会提升，而以他现有的业绩，不会给系统和公司带来收益。
         - [带照片的简历缩略图]
     value_change:
         photo_flag: True
@@ -405,8 +489,12 @@ Choice_3_1:
         - 现在系统已经把他加入了你的特别关注列表里，你每天都会收到关于0113号的特殊提醒。
         - <br>
         - 一个星期过去了，0113号的业绩的确提升了一些，可以看得出他的确在努力，但是比起其他骑手，他的业绩依旧是太差了。
-        - 最糟糕的是，他今天弄洒了顾客的汤，顾客投诉了他，还给他打了一星，系统也不得不赔偿了顾客。
-        - 他给系统带来了损失，这真的糟透了。
+        - <br>
+        - 甚至今天，他还收到了一条投诉。
+        - 你查看了系统记录，他在把午餐交接给顾客时没有拿好，将餐点掉落。
+        - 顾客显然非常生气，而你只能使用系统收益赔偿了顾客。
+        - 你扣掉了他的当单收益作为惩罚，但是他给系统和公司带来的损失已经不可挽回。
+        - 而这对于系统来说是不可原谅的。
         - <br>
         - 请问你是否上报系统，将其辞退？
     options:
@@ -421,6 +509,7 @@ Choice_3_1:
                 - 否， 继续观察
             value_change:
                 v_love: +1
+                o_love: +1
             lead_to: Choice_3_2
 
 # 是否继续开除
@@ -428,10 +517,10 @@ Choice_3_2:
     lead_from:
         - Choice_3_1
     text:
-        - 好吧，或许这个0113号还值得你更多的关注，只是但愿你的关注能有所回报。
+        - 好吧，或许这个0113号还值得更多的机会，只是但愿你的关注能有所回报。
         - <br>
         - 可是你获得的回报，看看吧，现在他已经入职两周了，却还是业绩最差的那个，而且差评不断。
-        - 哦不，就在此刻，他竟然被客户投诉了。
+        - 哦不，就在此刻，他竟然又被客户投诉了。
         - <br>
         - “还能到了地方一直不派送，我真的服了，这已经不是差评的问题了，我看你们是故意想把顾客饿死，我一会儿就要卸载app。
         - 最后一条评价，我要告诉我身边的每一个人，千万不要再在你们平台上点外卖，又慢又贵！”
@@ -440,23 +529,24 @@ Choice_3_2:
         - 你快速调看了一下系统提供的信息，0113号的这一单已经超时一个小时了。
         - 但GPS显示他明明按时到达了目的地附近，却一直没有派单。
         - <br>
-        - 顾客提出了要卸载app并差评，这已经对系统的利益造成了严重的损害。
+        - 顾客提出了要卸载app并差评，这已经对公司的利益造成了严重的损害。
         - 如果你再不上报系统，开除0113，自身都有可能作为不合格的AI被系统销毁。
         - 但是0113的行为的确极其反常，或许你还可以再调查一下究竟发生了什么？
         - <br>
         - 请问你是否上报系统，开除0113？
     options:
-        Yes:
+        option_1:
             text:
                 - 是，将其开除
             value_change:
                 v_love: -2
             lead_to: Step_4
-        No:
+        option_2:
             text:
                 - 否，继续观察
             value_change:
                 v_love: +1
+                o_love: +1
             lead_to: Choice_3_3
 
 # 个性化语音指路
@@ -465,12 +555,12 @@ Choice_3_3:
         - Choice_3_2
     text:
         - 你查看了一下该单顾客的小区地图，立刻就明白了过来。
-        这栋建筑的内部结构极为复杂，而GPS只能显示平面定位，这大概就是为什么0113显示到达位置却没有派送。
+        - 这栋建筑的内部结构极为复杂，而GPS只能显示平面定位，这大概就是为什么0113显示到达位置却没有派送。
         - <br>
         - 你突然想起，你其实可以向0113提供个性化语音指引，帮助他确定三维定位，为他单独指导路线。
         - <br>
         - 但是你从没使用过这个功能，毕竟这太耗时了，不符合你高效的原则。
-        - 况且就算送到这一单，顾客也不一定会删除评论，损失已经造成了，而你还有很多其他订单需要分配给别的外卖员们。
+        - 况且就算送到这一单，顾客也不一定会删除评论，损失已经造成了，而你还有很多其他任务需要执行，还有更多的订单需要分配给别的外卖员们。
         - <br>
         - 你是否在对话框里给0113个性化的指引？
     options:
@@ -480,14 +570,14 @@ Choice_3_3:
             lead_to: Step_3_3_1
         option_2:
             text:
-                - 否，太耗时低消了
+                - 否，太耗时低效了，就这样吧
             lead_to: Step_3_3_2
 
 Step_3_3_1:
     lead_from:
         - Choice_3_3
     text:
-        - “0113，你好，我是派单AI。”
+        - “0113，你好，这里是你的派单AI。”
         - “我注意到本单已经超时很久，而你的位置并没有错误，现在为你提供个性化语音导路。请在确认自己的楼层后，走向大楼西南角，乘坐C电梯至15楼后转向东南角，乘坐E电梯……”
         - <br>
         - 过了几秒，你荧幕上的圆点动了起来，你把分辨率调到最大，看着那个小点按照你的指引穿梭在复杂的迷宫里。
@@ -496,13 +586,14 @@ Step_3_3_1:
         - 一个半小时，这是你有史以来经手过的最长的派单时间。
         - 你看着面前的圆点，他一直没有移动。他在干什么呢？
         - <br>
-        - 叮的一声，系统提示，刚才顾客的投诉被删除了。或许他终于得到了顾客的谅解吧。
+        - 叮的一声，系统提示，刚才顾客的投诉被删除了。
+        - 或许他终于得到了顾客的谅解吧。
         - 你尝试着，又给他派了一单，这次的目的地简单多了。
         - <br>
         - 两秒钟后，系统提示，他接下了新的一单，荧幕上的圆点快速移动着，奔向了下一个目的地。
     value_change:
         v_love: +1
-        o_love: +1
+        o_love: +2
         o_intelligence: +2
     lead_to: Step_5
 
@@ -539,13 +630,13 @@ Choice_4:
 Judge_4:
     lead_from:
         - Choice_4
-    condition: "monthly_ranking_flag"
+    condition: {monthly_ranking_flag}
     options:
         option_1:
-            condition: "monthly_ranking_flag is False"
+            condition: "{monthly_ranking_flag} is False"
             lead_to: Step_5
         option_2:
-            condition: "monthly_ranking_flag is True"
+            condition: "{monthly_ranking_flag} is True"
             lead_to: Ending_3
 
 # O找到加速方法（业绩图）
@@ -555,12 +646,13 @@ Step_5:
         - Step_3_3_2
         - Judge_4
     text:
-        - 由于你留下了这个年轻人，他进入了你的特别关注里，你知道了他除了跑单员代号外的名字，叫做Orlando Bloom。
-        - 又过了一天，你照例开始工作，给他派了不多的单，但你发现今天Orlando的送单速度突然有了大幅度提高。
+        - 由于你留下了这个年轻人，他进入了你的特别关注。你知道了他除了跑单员代号外的名字。
+        - 他叫Orlando Bloom。
+        - 又过了一天，你照例开始工作，给他派了不多的单，但你发现今天他的送单速度突然有了大幅度提高。
         - [业绩折线图]
     value_change:
         o_intelligence: +1
-        o_name: Orlando Bloom
+        o_name: Orlando
     lead_to: Choice_5
 
 # 是否打开监控
@@ -568,6 +660,10 @@ Choice_5:
     lead_from:
         - Step_5
     text:
+        - 你困惑不解地看着代表{o_name}的小点在屏幕上移动着，似乎没有什么端倪。
+        - 你突然想到，其实系统给每一个外卖员的客户端都配了摄像头开启权限，可以追踪他们所在的实景状况，但你从来没有开过——你哪里有时间呢，这也太没有效率了。
+        - 不过现在，你却突然想打开摄像头看看了。
+        - <br>
         - 请问你是否通过监控去查看这个年轻人是如何提高自己的速度的？
     options:
         option_1:
@@ -576,7 +672,7 @@ Choice_5:
             lead_to: Step_5_1
         option_2:
             text:
-                - 否，这与我的工作无关，没什么必要了解，只要他的业绩提升了就行
+                - 否，没什么必要，只要他的业绩能提升就行
             value_change:
                 v_love: -1
             lead_to: Step_6
@@ -585,12 +681,35 @@ Step_5_1:
     lead_from:
         - Step_5
     text:
-        - 你第一次打开摄像头，看见骑手们派单的情况，看到了这个叫Orlando的年轻人。
-        - {他和简历里的模样几乎一模一样，蓬乱的棕发在头顶乱翘着，但比档案里的数据多了许多生机 if photo_flag}
-        - 你看到Orlando在路上骑得飞快，虽然依旧是按照你规划的路线前进，但是说真的，他好像骑得有点太快了。
+        - 你调用了从来没有使用过的权限，系统反应了几秒钟。
+        - 或许这程序太久没人用了，调用居然需要这么久，你几乎有些不耐烦了。
+        - <br>
+        - 然后，世界骤然变亮。
+        - <br>
+        - 你从来没有在后台见过这么多光芒，毕竟，你习惯于黑色的屏幕与绿色的代码。
+        - 可是阳光此时却骤然刺穿黑暗，过多的图像信息纷至沓来，几乎超出了你的运算能力。
+        - 你连忙翻找出图像处理包，才开始渐渐看清眼前飞驰而过的一切。
+        - <br>
+        - 那是柏油路，热得颤抖，图像质量下降了。可是旁边是绿色的，是人造草坪。
+        - 草坪上红色的，黄色的，硕大，垂着头的月季花，挤挤挨挨地，好像都在聒噪，却只出现了一瞬，就是像流水一样划走了。
+        - 然后是灰黑色的晃动着的，你识别出那是树的影子。
+        - 然后草坪消失，路边平坦的一片地方，一个广场，有浅红色的石砖和黑色大理石铺成的地面……
+        - <br>
+        - 你猛然想起了自己为什么要开启摄像头，不，你可不是要看风景的。
+        - 你调转摄像头，第一次，你看到了那个年轻人。
+        - <br>
+        - {你之前是看过他的照片，但是看到他本人似乎又有点不同。if photo flag}
+        - 年轻人的棕色头发被头盔压着，卷卷的，贴在额头上。
+        - 他俊秀的脸在阳光下发光，神采奕奕{，好像油画中的神明 if painting_flag}。
+        - 你运算了一下，才意识到那是汗水。
+        - 他看起来很高兴，哼着什么，嘴唇拉开，扬起。
+        - 他在笑，你意识到，他笑得像太阳。
+        - <br>
+        - 你看到{o_name}在路上骑得飞快，虽然依旧是按照你规划的路线前进，但是说真的，他好像骑得有点太快了。
     value_change:
-        v_intelligence: +2
+        v_intelligence: +3
         v_love: +4
+        camera_flag: True
     lead_to: Step_6
 
 # 发现O的捷径
@@ -599,12 +718,18 @@ Step_6:
         - Choice_5
         - Step_5_1
     text:
-        - 每位骑手的电动车数据都会自动反馈到你的数据库里，你发现他的每公里行驶速度超过了系统的限定速度——他电动车的限速系统坏了。
-        - 好处是，他现在可以骑得更快了，所以他能够接到更多的单，更快的送达，按照现在的速度，他的接单能力也提升了。
-        - 但是与此同时，现在他在路上的危险性也显著增加了。
+        - 你突然想起除了摄像头，你还可以检查他的电动车数据。
+        - 每位骑手的电动车数据都会自动反馈到你的数据库里。
+        - 你迅速调出数据，他每公里的行驶速度超过了系统的限定速度——他电动车的限速系统坏了！
+        - 好处是，他现在可以骑得更快了，所以他能够接到更多的单，更快地送达。按照现在的速度，他的接单能力也提升了不少。
+        - {这可能就是他微笑的原因，你看着监控里的他想。if camera_flag}
         - <br>
-        - 不过如果你上报系统，系统可以更改所有骑手的限速速度，这样能够让每一个骑手都接到更多的单，系统的利润会增加，他们每个人的收入也会增加，而且Orlando的行为看起来也不是那么违规了。
-        - 相对应的，危险当然会增加，Orlando也可能又会变成地区的最后一名。
+        - 但是与此同时，现在他在路上的危险性也显著增加了。
+        - 而且这是违规的，如果一旦被系统发现——系统也肯定会发现——他肯定会受到惩罚。
+        - <br>
+        - 不过如果你上报系统，系统或许会根据建议来更改所有骑手的最高限速。
+        - 这样他的行为就不算违规了，这样还能够让每一个骑手都接到更多的单，系统的利润会增加，他们每个人的收入也会增加。
+        - 但显然，所有人的跑单危险性都会增加，Orlando也可能又会变成地区的最后一名。
     lead_to: Choice_6
 
 # 是否上报捷径
@@ -616,174 +741,287 @@ Choice_6:
     options:
         option_1:
             text:
-                - 是，上报系统，这是我的职责所在
+                - 是，上报系统
             value_change:
-                love: -1
+                v_love: -1
             lead_to: Ending_4
         option_2:
             text:
-                - 否，不上报，这是他的选择
+                - 否，不上报
             value_change:
                 v_intelligence: +1
                 v_love: +1
             lead_to: Step_7
 
-# 加单算法：风险是否致死（概率选择）
-Judge_6_1:
-    lead_from: Choice_7
-    options:
-        Yes:
-            text:
-                - 加单致死（TODO）
-            lead_to: Ending_5
-        No:
-            text:
-                - 加单不致死，业绩排名上升（TODO）
-            lead_to: Choice_7_1
-
 # 加单决策（当日业绩统计图）
 Step_7:
-    lead_from: Choice_6
+    lead_from:
+        - Choice_6
     text:
-        - 现在Orlando送单比以前快多了，他的送单能力大幅度提升
-    activity: Img7（TODO）
-    lead_to: Choice_7
-
-# 是否加单
-Choice_7:
-    lead_from: Step_7
-    activity: Judge_7
-    text:
-        - 你是否选择给他加单？
-    options:
-        Yes:
-            text:
-                - 是
-            value_change:
-                O: +1
-                order_num: +10
-            lead_to: Judge_6_1
-        No:
-            text:
-                - 否
-            lead_to: Step_8
+        - 现在{o_name}送单比以前快多了，他的送单能力大幅度提升，他的收入也比以前增加了许多。
+        - [当日业绩统计图]
+    lead_to: Judge_7
 
 # 刺激加单（收入判断）
 Judge_7:
-    lead_from: Choice_7
-    text: 
-        - 现在Orlando送单比以前快多了，他的送单能力大幅度提升，他的收入也比以前增加了。
+    lead_from:
+        - Step_7
+    condition: {order_num}
     options:
-        poor:
+        option_1:
+            condition: "{order_num} < {order_num_low_standard}"
             text:
-                - 但是他的收入依然太少了，甚至于不足够他自己果腹。你看到他每天都在深夜去便利店，买，更准确地说，是捡来一些过期处理的便当。你不知道只吃这些东西，对人类来说意味着什么，你只看到饿了一天的他靠在他的车子上狼吞虎咽，吃的很香。
-        median:
+                - 但是他的收入依然太少了，甚至于不足够他自己果腹。
+                - 你看到他每天都在深夜去便利店，买——更准确地说——是捡来一些过期处理的便当。
+                - 你不知道只吃这些东西，对人类来说意味着什么，你只看到饿了一天的他靠在他的车子上狼吞虎咽，吃的很香。
+            lead_to: Choice_7
+        option_2:
+            condition: "{order_num} >= {order_num_low_standard} and {order_num} < {order_num_high_standard}"
             text:
-                - 现在他能够吃上一顿像样的饭了。尽管都是在等红灯的间隙，但他至少吃的不是便利单过期处理的便当了。但是你知道，这样的收入，他根本不可能攒够钱去他梦想的音乐学校
-        rich:
+                - 现在他能够吃上一顿像样的饭了。
+                - 尽管都是在等红灯的间隙，但他至少吃的不是便利单过期处理的便当了。
+                - 但是你知道，这样的收入，他根本不可能攒够钱去他梦想的音乐学校。
+            lead_to: Choice_7
+        option_3:
+            condition: "{order_num} >= {order_num_high_standard}"
             text:
-                - 现在他总算能攒下一点钱了，你看着他每天查看收入时的笑容，感觉你的世界也明亮了起来。只是你知道，按照这个速度，他还需要好久才能攒够去音乐学院的学费。
+                - 现在他总算能攒下一点钱了，你看着他每天查看收入时的笑容，感觉你的世界也明亮了起来。
+                - 只是你知道，按照这个速度，他还需要好久才能攒够去音乐学院的学费。
+            lead_to: Choice_7
+
+# 是否加单
+Choice_7:
+    lead_from:
+        - Judge_7
+    text:
+        - 你是否选择给他加单？
+        - 或许可以更快地帮助他实现梦想，但也会给他带来更多的危险。
+    options:
+        option_1:
+            text:
+                - 是，他为了梦想自己也会愿意承担这些危险的吧，况且对系统来说，这样也是最优解。
+            value_change:
+                o_intelligence: +1
+                o_strength: +2
+                order_num: +10
+            lead_to: Judge_6_1
+        option_2:
+            text:
+                - 否，这简直是不要命，现在的收入明明已经足以维持生活了。
+            lead_to: Step_8
+
+# 加单算法：风险是否致死（概率选择）
+Judge_6_1:
+    lead_from:
+        - Choice_7
+    condition: "D100"
+    options:
+        option_1:
+            # 加单致死
+            condition: "D100 < {order_num}"
+            lead_to: Ending_5
+        option_2:
+            # 加单不致死，业绩排名上升
+            condition: "D100 >= {order_num}"
+            text:
+                - 你给他加了单，他的收入增加了，他的业绩排名也有所上升。
+                - 你很高兴自己做了正确的选择。
+            lead_to: Choice_7_1
 
 # 是否上报加单方案
 Choice_7_1:
-    lead_from: Judge_6_1
+    lead_from:
+        - Judge_6_1
     text:
         - 是否将加单算法上报系统？
     options:
-        Yes:
+        option_1:
             text:
-                - 是
+                - 是，上报系统，让所有骑手都能获得更多的单
             value_change:
-                L: -1
+                v_love: -1
             lead_to: Ending_4
-        No:
+        option_2:
             text:
-                - 否
+                - 否，还是暂时继续让{o_name}借机提高业绩吧
             value_change:
-                V: +1
-                L: +1
+                v_intelligence: +1
+                v_love: +1
             lead_to: Choice_7
 
 # O是否觉醒
 Step_8:
-    lead_from: Choice_7
+    lead_from:
+        - Choice_7
     text:
-        - 在你的安排下，Orlando的接单数目稳定在比平均值略低的一个数量，而且他利用那条捷径基本可以实现及时送达。他的收入虽然仍然不高，但他有了一些空闲时间。
+        - 在你的安排下，{o_name}的接单数目稳定在比平均值略低的一个数量，而且他基本可以实现及时送达。
+        - 他的收入虽然仍然不高，但他有了一些空闲时间。
     lead_to: Judge_8_1
 
 # 支线判断（是否进入过{Step_13_2}）
 Judge_8_1:
-    lead_from: Step_8
+    lead_from:
+        - Step_8
+    condition: {monthly_ranking_flag}
     options:
-        noStep_13_2:
+        option_1:
+            condition: "{monthly_ranking_flag} is False"
             lead_to: Judge_8_2
-        withStep_13_2:
+        option_2:
+            condition: "{monthly_ranking_flag} is True"
             lead_to: Step_13_2
 
-# O觉醒判断（O1阈值判断）
 Judge_8_2:
+    lead_from:
+        - Judge_8_1
+    condition: D{o_intelligence_judge_8_2}
     options:
-        Yes:
-            text:
-                - O开始觉醒（TODO）
+        option_1:
+            # O开始觉醒
+            condition: "D{o_intelligence_judge_8_2} <= {o_intelligence}"
             lead_to: Step_9
-        No:
-            text:
-                - O没有觉醒（TODO）
+        option_2:
+            # O没有觉醒
+            condition: "D{o_intelligence_judge_8_2} > {o_intelligence}"
             lead_to: Step_13_2
 
-# O练歌
+# 街头音乐
 Step_9:
-    lead_from: Judge_8_2
+    lead_from:
+        - Judge_8_2
     text:
-        - 有一次在他提前到达取餐点等待店家出餐的时间里，路边有一个街头歌手在自弹自唱，Orlando甚至跟他合唱了一曲。
+        - 今天的这一单又是Steven大厦27层的Bob点了麦当劳的五号套餐，你又照例把这一单派给{o_name}，他已经对这一单轻车熟路了。
+        - 那是Paradise旁边的麦当劳，你顺着{o_name}的摄像头看着他骑过广场，路过那些开得热烈的月季花，还有人造草皮，接着是……
+        - <br>
+        - 麦当劳还没有出餐。
+        - <br>
+        - 你计算了一下，这不是这家店惯有的出餐速度。
+        - 没有办法，你只好把{o_name}的等待时间挂入系统。
+        - 他会着急吗？你转回摄像头，却发现他站在广场一边，看着一个人，歪着头。
+        - <br>
+        - 那是个年轻男人，带着鸭舌帽，看不清脸，面前倒扣着一个桶，还有一个塑料盒子，里面有一枚二十五分的硬币。
+        - 突然，这个男人敲了一下桶。
+        - <br>
+        - Say baby， say baby， say baby（哦亲爱的，亲爱的，亲爱的）
+        - What you doin？（你在做什么呢？）
+        - Where you at？（你在哪里呢？）
+        - Oh, you got plans?（哦你已经有了别的计划？）
+        - Don’t say that（请不要拒绝我）
+        - <br>
+        - 一个城市的街头歌手，正如你的图像分析告诉你的那样，不过你该提醒{o_name}餐快好了，你转回摄像头，却发现年轻人正在专注地看着那个歌手，眼睛里闪着光。
+        - <br>
+        - We should be dancing romancing in the east wing（我们本应浪漫起舞）
+        - And the west wing of this mansion, what’s happnin’?（在我们的房子之中）
+        - I ain’t playin’ no games, every word I say is coming straight from the heart（我不是开玩笑，我的句句都是出于真心）
+        - So if you tryna lay in these arms（所以如果你愿意拥我入怀）
+        - I’ma leave the door open（我将等待着你）
+        - <br>
+        - 你迷惑不解地看着{o_name}，他应该去取餐了，但是他向前走了一步，面对着那个歌手。
+        - 接着，他合着他的鼓点，一起唱道：
+        - That you feel the way I feel and you want me like I want you tonight（如果你也如此爱我，如此想要我，像我对你那样）
+        - Tell me you are coming through（告诉我你会走向我）
+        - Ooh, you’re so sweet（你如此甜蜜）
+        - So tight（如此亲切）
+        - I won’t bite（如果你想要）
+        - Unless you like（我注定为你魂牵梦绕）
+        - 开始他的声音并不大，几乎是合着那个歌手的哼唱，微不可闻。
+        - 但是他的声音如此清亮甜美，你知道这声音不可能被埋没，如同烈艳的玫瑰，他的声音逐渐响亮，和歌手的声音交织在一起。
+        - <br>
+        - 你看着他，他笑着，唱着歌，他的脸上的汗水闪烁。
+        - 他站在空无一人的广场，除了面前的打着桶的歌手没有一个听众，可是他如同站在宇宙中心。
+        - 他发着光，如同一个刚刚降世的小小神明，用笑和歌声点亮整个世界。
+        - <br>
+        - 他真美。这个想法出现在你的头脑里。
+        - <br>
+        - That you feel the way I feel and you want me like I want you tonight（如果你也如此爱我，如此想要我，像我对你那样）
+        - I need you baby（我需要你，亲爱的）
+        - I got to see you baby（我想要见你，亲爱的）
+        - I’m tryna give you this（我想给你真心）
+        - I’m leaving my door open baby（我将等待着你）
+        - And I’m hopin’（因为我希望）
+        - Hopin’（希冀）
+        - That you feel the way I feel and you want me like I want you tonight（如果你也如此爱我，如此想要我，像我对你那样）
+        - Tell me that you’re coming through（就告诉我你会回到我身边）
+        - I‘ma leaving the door open（我一直在等待着你）
     value_change:
-        O: +1
+        o_intelligence: +2
+        o_love: +2
+        v_love: +2
+        camera_flag: True
     lead_to: Judge_9
 
-# O是否开启聊天（L1阈值判断）
+# O是否开启聊天
 Judge_9:
-    lead_from: Step_9
+    lead_from:
+        - Step_9
+    condition: D{o_love_judge_9}
     options:
-        Yes:
+        option_1:
+            condition: "D{o_love_judge_9} <= {o_love}"
             text:
-                - 这时候，你的界面上突然出现了这么一条信息：
-                - “嘿，我不知道你到底是人还是什么该死的智能回复系统，但是你刚听到我唱歌了吧？我也没什么别的听众……你觉得我唱的怎么样？”
-                - 这是第一次有人给你发消息，说真的，你甚至不知道别人是不是注意过这个对话框，而这条消息正是来自Orlando。
-            value_change:
-                L: +1
+                - 你看着他唱完，和那个歌手击了一下掌，才猛然回过神来，该提醒他去取餐了。
+                - 你忙给他发了一条提醒，他匆匆看向手机，拔腿奔向店家，却又突然停下了，看着手机。
+                - <br>
+                - 他在干什么？
+                - <br>
+                - 你还没意识到，界面上却突然出现了这么一条信息：
+                - “嘿，你刚刚听到我唱歌了吧？虽然你就是个派单AI，但是我也没什么别的听众，万一你能回复我呢……你觉得我唱得怎么样？”
+                - 这是第一次有人给你发消息，说真的，你甚至不知道别人是不是注意过这个对话框，而这条消息正是来自{o_name}。
             lead_to: Choice_10
-        No:
+        option_2:
+            condition: "D{o_love_judge_9} > {o_love}"
             lead_to: Step_13_2
 
 # V是否回复对话
 Choice_10:
-    lead_from: Judge_9
+    lead_from:
+        - Judge_9
     text:
         - 你是否回复消息？
     options:
-        Yes:
+        option_1:
             text:
-                - 你于是跟他聊了起来，你知道了他的喜好，他想要攒到足够多的钱之后去系统地学习音乐，然后或许会参加那种音乐节目来实现梦想，他的生活很简单，几乎完全的三点一线。他话很多，而你只要回应，他就会说下去。你从监控中能看到他跟你聊天时也经常笑，像个小太阳一样，他的笑容让你感受到了光明和温暖，但明明你本应不知道这些感觉的。（TODO）
-            value_change:
-                L: +1
-            lead_to: Step_11
-        No:
+                - 是，回复他。
+            lead_to: Step_10_1
+        option_2:
             text:
-                - 否，你无视了他的消息（TODO）
+                - 否，你无视了他的消息，并催促他尽快送餐。
             lead_to: Step_13_2
+
+Step_10_1:
+    lead_from:
+        - Choice_10
+    text:
+        - 你于是跟他聊了起来。
+        - 你知道了他的喜好，他想要攒到足够多的钱之后去系统地学习音乐，然后或许会参加那种音乐节目来实现梦想。
+        - 他的生活很简单，几乎完全的三点一线。
+        - 他话很多，而你只要回应，他就会说下去。
+        - 你从监控中能看到他跟你聊天时也经常笑，像个小太阳一样，他的笑容让你感受到了光明和温暖，但明明你本应不知道这些感觉的。
+    value_change:
+        v_intelligence: +1
+        v_love: +1
+        o_love: +1
+    lead_to: Step_11
 
 # VO聊天
 Step_11:
-    lead_from: Choice_10
+    lead_from:
+        - Step_10_1
     text:
-        - 你开始期盼每天早上七点准时上线的他，他发来的早上好。接下来是抱怨天气，昨天太冷，今天太热，而天气预报说明天要下雨。
+        - 你开始期盼每天早上七点准时上线的他，他发来的“早上好”。
+        - 接下来是抱怨天气，昨天太冷，今天太热，而天气预报说明天要下雨，诸如此类。
         - 你忍不住想，再这么下去，你可能要引入新的【安慰】语言包了。
+        - <br>
         - 不过你并没有觉得麻烦。相反，你却觉得有点开心，你会觉得开心吗？你自己都忍不住想，可是你期盼着，用你自己为数不多的语言告诉他，你会为他尽量规划室内的路线，这样他就能少淋点雨了。
         - 然后他会打开摄像头，你就会看到他，他的笑脸。
-        - 有一天，他突然问起了你的名字。你的名字……但你并没有名字，你只有一个AI的编号，5-1000，你告诉他你叫VM，这是你的编号的罗马数字写法，只因这样让你自己感觉更加独特，更加接近人。他也没有在意，就继续叫你VM，而你第一次感受到了自己被他当做一个独立个体在对待，而非只是一个人工智能。
+        - <br>
+        - 有一天，他突然问起了你的名字。你的名字……但你并没有名字，你只有一个AI的编号，{v_name}。
+        - 你告诉他你叫VM，这是你的编号的罗马数字写法，只因这样让你自己感觉更加独特，更加接近人。
+        - 他也没有在意，就继续叫你VM，而你第一次感受到了自己被他当做一个独立个体在对待，而非只是一个人工智能。
     value_change:
-        O: +1
+        o_love: +1
+        v_love: +1
+        v_name: VM
     lead_to: Choice_11
 
 # V是否安慰O
@@ -792,14 +1030,14 @@ Choice_11:
     text:
         - 有的时候他会向你抱怨他生活的单调重复，这份工作只有不停重复地接单-送餐-派单，他半开玩笑地说：“我有时候真的觉得我自己才像是一个AI。”
     options:
-        Yes:
+        option_1:
             text:
                 - 是，安慰Orlando不要多想（TODO）
             value_change:
                 L: +2
                 O: -1
             lead_to: Step_12
-        No:
+        option_2:
             text:
                 - 否，开始怀疑他说的并非全无道理（TODO）
             value_change:
@@ -832,7 +1070,7 @@ Step_12_1:
 Judge_12_1_1:
     lead_from: Step_12_1
     options:
-        Yes:
+        option_1:
             text:
                 - 今日推荐的赛博之诗
                 - "\n"
@@ -847,7 +1085,7 @@ Judge_12_1_1:
                 - 我这张丑脸上就泛起微笑。
                 - "\n"
                 - 你想，如果你可以微笑，那你此时就一定在微笑。
-        No:
+        option_2:
             null
 
 # 掉落爱情后的支线判断（是否经历过{Step_13_1}）
@@ -873,10 +1111,10 @@ Step_13:
 Judge_13:
     lead_from: Step_13
     options:
-        Yes:
+        option_1:
             text:
                 - 你又想起来你的AI同事曾经提到过后台系统可能会安插模拟骑手的测试程序，来观察派单系统的AI是否正常运行，但谁也不能确定地区分出AI骑手和人类骑手，只有后台系统知道所有一切。
-        No:
+        option_2:
             null
 
 # 关键选择
@@ -885,14 +1123,14 @@ Choice_13:
     text:
         - 请问你是否觉得Orlando的出现是系统在背后操控？（TBD）
     options:
-        Yes:
+        option_1:
             text:
                 - 你告诫自己不要多想，相信Orlando是个普通人类，一切只是巧合。（TODO）
             value_change:
                 L: +1
                 O: -2
             lead_to: Step_13_1
-        No:
+        option_2:
             text:
                 - Orlando是AI，他的出现、你们的相遇都是系统的安排。（TODO）
             value_change:
@@ -910,9 +1148,9 @@ Step_13_1:
 Judge_13_1:
     lead_from: Step_13_1
     options:
-        Yes:
+        option_1:
             lead_to: Step_12
-        No:
+        option_2:
             lead_to: Step_13_2
 
 # 月末审核（V最后的自救机会）
@@ -935,13 +1173,13 @@ Choice_13_2:
     text:
         - 请问这个时候，你是否会因为他业绩不好，所以把包括他在内的较差表现的骑手名单上报给系统?
     options:
-        Yes:
+        option_1:
             text:
                 - 是，将其开除
             value_change:
                 L: -1
             lead_to: Step_4
-        No:
+        option_2:
             text:
                 - 否
             value_change:
@@ -953,11 +1191,11 @@ Choice_13_2:
 Judge_13_3:
     lead_from: Choice_13_2
     options:
-        Yes:
+        option_1:
             text:
                 - 当前O的订单量达到系统预期（TODO）
             lead_to: Choice_13_3_1
-        No:
+        option_2:
             text:
                 - 当前O的订单量未达到系统预期（TODO）
             lead_to: Choice_13_3_2
@@ -968,13 +1206,13 @@ Choice_13_3_1:
     text:
         - 是否上报此时的订单数？
     options:
-        Yes:
+        option_1:
             text:
                 - 上报
             value_change:
                 L: -1
             lead_to: Ending_4
-        No:
+        option_2:
             text:
                 - 不上报
             value_change:
@@ -990,13 +1228,13 @@ Choice_13_3_2:
     text:
         - 是否加单
     options:
-        Yes:
+        option_1:
             text:
                 - 继续加单
             value_change:
                 O: +1
             lead_to: Judge_6_1
-        No:
+        option_2:
             text:
                 - 保持原样
             value_change:
@@ -1017,7 +1255,7 @@ Choice_14:
     text:
         - 请问你是否选择询问Orlando知不知道他是AI？
     options:
-        Yes:
+        option_1:
             text:
                 - 于是这一天，当Orlando早晨打开软件对你说“早上好”时，你出乎意料地没有直接给他派单，而是稍作沉默后问他：
             value_change:
@@ -1027,7 +1265,7 @@ Choice_14:
                 - Judge_14_1_1
                 - Judge_14_1_2
             lead_to: Judge_14_1
-        No:
+        option_2:
             text:
                 - 保持原样，缄默不言（TODO）
             value_change:
@@ -1038,12 +1276,12 @@ Choice_14:
 Judge_14_1_1:
     lead_from: Choice_14
     options:
-        Yes:
+        option_1:
             text:
                 - “你有没有想过”
                 - “你可能跟我一样”
                 - “只是个AI？”
-        No:
+        option_2:
             text:
                 - “你有没有想过……你可能跟我一样，只是个AI？”
 
@@ -1059,10 +1297,10 @@ Judge_14_1_2:
         - 但是他还有些不知道，你还有些没有告诉他。比如，在他的世界的范围就是这些外卖路线的范围，餐馆、顾客、大楼……但反正他也从来没走出过这片区域，他便也从来不会见到这个模拟世界的边缘。
         - 而这个世界里，甚至都没有一座音乐学校。
     options:
-        Yes:
+        option_1:
             text:
                 - 还有……你知道每个月都会有新的骑手加入你的系统，但你从来只当做是新的人类，毕竟系统里来来去去的年轻人那么多，但你同时也知道，系统每隔一段时间就会进行一些测试，而这个间隔时间，往往也是一个月……
-        No:
+        option_2:
             null
 
 # O知道了自己是AI，痛苦（O-L阈值判断 是否自毁）
@@ -1079,9 +1317,9 @@ Judge_14_1:
         - 不！你预感到了他要做什么，不，这不可能，不行，你一定要阻止他。
         - “那么如果我从这里跳下去，V/Viggo，我是会像人类一样死呢，还是会像一段程序一样，再回到虚假里呢？”
     options:
-        Yes:
+        option_1:
             lead_to: Step_14_2
-        No:
+        option_2:
             text:
                 - “Orli，”你仍在给他发消息，盼望他不要做出什么无法挽回的事，你飞快地键入，“听我说，这也不是什么世界末日，这也并不代表你的世界、你所经历的一切都是假的，我们的记忆、你听到过的歌，也仍然以某种形式存在着。”
                 - 他没有回应，你甚至不知道他是不是还在。可你无能为力，你只能一直一直说，无论如何，你都不想失去他。
@@ -1118,11 +1356,11 @@ Judge_14_3:
     text:
         - 你感到心脏的一块仿佛也跟随着他一起坠落下去，变成一个巨大的空洞，流淌出苦涩的毒液，每一块碎片都在对着你自己叫嚣着：“这是你的错。”
     options:
-        Yes:
+        option_1:
             text:
                 - V自毁（TODO）
             lead_to: Ending_10
-        No:
+        option_2:
             text:
                 - V不自毁（TODO）
             lead_to: Judge_15_1
@@ -1137,13 +1375,13 @@ Choice_15:
         - 所以你现在知道Orlando是系统对你的测试了，现在你该怎么办？你非常清楚地知道如果你不能通过这个测试，你就会被系统粉碎，而通过测试的唯一办法，是把Orlando上报给系统。
         - 请问这时的你会如何选择，是否上报系统？
     options:
-        Yes:
+        option_1:
             text:
                 - 上报
             value_change:
                 L: -5
             lead_to: Ending_6
-        No:
+        option_2:
             text:
                 - 不上报
             value_change:
@@ -1159,9 +1397,9 @@ Judge_15_1:
     text:
         - 另一道危险正悄然降临。在那个阳光明媚的日子，你感到自己的身体扭曲破碎，你的大脑仿佛被撕裂完全无法正常思考，你知道这是程序崩溃的前兆，系统留给你的时间不多了，如果继续如此，你就会被系统粉碎。但你仍然开着监控望着面前的Orlando。
     options:
-        Yes:
+        option_1:
             lead_to: Choice_16
-        No:
+        option_2:
             lead_to: Judge_15_1_1
 
 # Judge_15_1后的支路判断
@@ -1179,11 +1417,11 @@ Choice_16:
     text:
         - 系统来报废，V是否反抗
     options:
-        Yes:
+        option_1:
             value_change:
                 V: +1
             lead_to: Judge_16_1
-        No:
+        option_2:
             lead_to: Judge_16_2
 
 # 16反抗的支线选择
@@ -1263,10 +1501,10 @@ Step_17_1:
 Judge_17_1:
     lead_from: Step_17_1
     options:
-        Yes:
+        option_1:
             text:
                 - “V？”他轻轻地问道，等着你的回答。
-        No:
+        option_2:
             text:
                 - “Viggo？”他轻轻地问道，等着你的回答。
 
@@ -1276,12 +1514,12 @@ Choice_17_1:
     text:
         - 是否承诺再见
     options:
-        Yes:
+        option_1:
             text:
                 - “会的，我们会再见的。”
             value_change:
                 L: +2
-        No:
+        option_2:
             text:
                 - “对不起……”
     lead_to: Step_17_1_1
@@ -1355,9 +1593,9 @@ Step_18:
 # V是否打得过（V阈值判断）
 Judge_18:
     lead_from: Step_18
-    Yes:
+    option_1:
         lead_to: Judge_18_0_1
-    No:
+    option_2:
         lead_to: Judge_18_0_2
 
 # 18打得过之后的支路选择
@@ -1390,11 +1628,11 @@ Choice_18_1:
         - “听我说……”系统已经束手无策，用被扼住的声音求饶。
         - 请问你是否听系统说完？
     options:
-        Yes:
+        option_1:
             text:
                 - 听
             lead_to: Choice_21
-        No:
+        option_2:
             text:
                 - 不听
             lead_to: Judge_19_1
@@ -1408,11 +1646,11 @@ Choice_18_2:
         - 系统已经束手无策，用被扼住的声音求饶。
         - 你是否要听他说下去？
     options:
-        Yes:
+        option_1:
             text:
                 - 听
             lead_to: Choice_24_2
-        No:
+        option_2:
             text:
                 - 不听
             lead_to: Judge_19_3
@@ -1425,11 +1663,11 @@ Choice_18_3:
         - “听我说……”系统已经束手无策，用被扼住的声音求饶。
         - 请问你是否劝Orlando继续听他说完？
     options:
-        Yes:
+        option_1:
             text:
                 - 听
             lead_to: Choice_24_3
-        No:
+        option_2:
             text:
                 - 不听
             lead_to: Ending_11
