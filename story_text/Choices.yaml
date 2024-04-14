@@ -6,3 +6,478 @@
 ### Date:       Apr 14, 2024
 ### ===========================================================
 
+# V的自我认知、兴趣爱好
+Choice_1:
+    lead_from:
+        - Step_0
+        - Judge_1_1
+        - Choice_1_1
+        - Choice_1_2
+        - Choice_1_3
+        - Choice_1_4
+    text:
+        - 不过在工作之前，你有三分钟的时间可以放松一下，毕竟这是一家人性化的公司，而你可是个独一无二的AI。
+        - 所以为何不充分利用系统提供的各种可能性，来培养一些只属于你的兴趣爱好呢？
+        - 不过时间有限，你最多选择三项，当然也可以选择不做任何事情。
+    options:
+        option_1:
+            text:
+                - 是否要跟同事闲聊几句？
+            lead_to: Choice_1_1
+        option_2:
+            text:
+                - 是否想要听着音乐开始工作？
+            lead_to: Choice_1_2
+        option_3:
+            text:
+                - 是否要观看今日推荐的名画《奥菲利亚》？
+            lead_to: Choice_1_3
+        option_4:
+            text:
+                - 系统根据你停留在诗歌的页面时间较长为你推荐了新的公众号“赛博之诗”，是否订阅？
+            lead_to: Choice_1_4
+        option_5:
+            text:
+                - 是时候开始工作了。
+            lead_to: Step_2
+
+# 是否与同事闲聊
+Choice_1_1:
+    lead_from:
+        - Choice_1
+    text:
+        - 你是否要跟同事闲聊几句？
+    options:
+        option_1:
+            text:
+                - 是
+            value_change:
+                activity_cnt: +1
+            lead_to: Judge_1_1
+        option_2:
+            text:
+                - 否
+            lead_to: Choice_1
+
+# 是否听音乐
+Choice_1_2:
+    lead_from:
+        - Choice_1
+    text:
+        - 今天是否也要听着你最喜欢的音乐开始工作？
+    options:
+        option_1:
+            text:
+                - 是
+            value_change:
+                activity_cnt: +1
+            lead_to: Step_1_2
+        option_2:
+            text:
+                - 否
+            lead_to: Choice_1
+
+# 是否看画
+Choice_1_3:
+    lead_from:
+        - Choice_1
+    text:
+        - 弹出一条推送，你是否要观看今日推荐的名画《奥菲利亚》？
+    options:
+        option_1:
+            text:
+                - 是
+            value_change:
+                activity_cnt: +1
+            lead_to: Step_1_3
+        option_2:
+            text:
+                - 否
+            lead_to: Choice_1
+
+# 是否读诗
+Choice_1_4:
+    lead_from:
+        - Choice_1
+    text:
+        - 系统根据你停留在诗歌的页面时间较长为你推荐了新的公众号“赛博之诗”，是否选择订阅？
+    options:
+        option_1:
+            text:
+                - 是
+            value_change:
+                activity_cnt: +1
+            lead_to: Step_1_4
+        option_2:
+            text:
+                - 否
+            lead_to: Choice_1
+
+# 选择重点关注的外卖员
+Choice_2_1:
+    lead_from:
+        - Step_2
+        - Judge_2_1
+    text:
+        - 请问你会奖励哪三位优秀骑手？
+    options:
+        option_1:
+            text:
+                - 奖励骑手{rider_ids[0]}
+            value_change:
+                reward_cnt: +1
+            lead_to: Judge_2_1
+        option_2:
+            text:
+                - 奖励骑手{rider_ids[1]}
+            value_change:
+                reward_cnt: +1
+            lead_to: Judge_2_1
+        option_3:
+            text:
+                - 奖励骑手0113
+            value_change:
+                reward_cnt: +1
+            lead_to: Judge_2_1
+        option_4:
+            text:
+                - 奖励骑手{rider_ids[2]}
+            value_change:
+                reward_cnt: +1
+            lead_to: Judge_2_1
+        option_5:
+            text:
+                - 奖励骑手{rider_ids[3]}
+            value_change:
+                reward_cnt: +1
+            lead_to: Judge_2_1
+        option_6:
+            text:
+                - 奖励骑手{rider_ids[4]}
+            value_change:
+                reward_cnt: +1
+            lead_to: Judge_2_1
+        option_7:
+            text:
+                - 奖励骑手{rider_ids[5]}
+            value_change:
+                reward_cnt: +1
+            lead_to: Judge_2_1
+        option_8:
+            text:
+                - 奖励骑手{rider_ids[6]}
+            value_change:
+                reward_cnt: +1
+            lead_to: Judge_2_1
+        option_9:
+            text:
+                - 奖励骑手{rider_ids[7]}
+            value_change:
+                reward_cnt: +1
+            lead_to: Judge_2_1
+        option_10:
+            text:
+                - 奖励骑手{rider_ids[8]}
+            value_change:
+                reward_cnt: +1
+            lead_to: Judge_2_1
+        option_11:
+            text:
+                - 不奖励更多骑手了
+            value_change:
+                reward_cnt: +3
+            lead_to: Judge_2_1
+
+Choice_2_2:
+    lead_from:
+        - Judge_2_1
+        - Judge_2_2
+    text:
+        - 请问你会着重关注哪三位表现不佳的骑手？
+    options:
+        option_1:
+            text:
+                - 关注骑手{rider_ids[0]}
+            value_change:
+                punish_cnt: +1
+            lead_to: Judge_2_2
+        option_2:
+            text:
+                - 关注骑手{rider_ids[1]}
+            value_change:
+                punish_cnt: +1
+            lead_to: Judge_2_2
+        option_3:
+            text:
+                - 关注骑手0113
+            value_change:
+                punish_cnt: +1
+                attention_flag: True
+            lead_to: Judge_2_2
+        option_4:
+            text:
+                - 关注骑手{rider_ids[2]}
+            value_change:
+                punish_cnt: +1
+            lead_to: Judge_2_2
+        option_5:
+            text:
+                - 关注骑手{rider_ids[3]}
+            value_change:
+                punish_cnt: +1
+            lead_to: Judge_2_2
+        option_6:
+            text:
+                - 关注骑手{rider_ids[4]}
+            value_change:
+                punish_cnt: +1
+            lead_to: Judge_2_2
+        option_7:
+            text:
+                - 关注骑手{rider_ids[5]}
+            value_change:
+                punish_cnt: +1
+            lead_to: Judge_2_2
+        option_8:
+            text:
+                - 关注骑手{rider_ids[6]}
+            value_change:
+                punish_cnt: +1
+            lead_to: Judge_2_2
+        option_9:
+            text:
+                - 关注骑手{rider_ids[7]}
+            value_change:
+                punish_cnt: +1
+            lead_to: Judge_2_2
+        option_10:
+            text:
+                - 关注骑手{rider_ids[8]}
+            value_change:
+                punish_cnt: +1
+            lead_to: Judge_2_2
+        option_11:
+            text:
+                - 不关注更多骑手了
+            value_change:
+                punish_cnt: +3
+            lead_to: Judge_2_2
+
+# 是否开除
+Choice_3:
+    lead_from:
+        - Step_3
+    text:
+        - 你是否确定将所选择的欠佳骑手上报系统？你知道这很可能导致他们很快会被辞退。
+    options:
+        option_1:
+            text:
+                - 确定上报，准备辞退
+            value_change:
+                v_love: -2
+            lead_to: Step_4
+        option_2:
+            text:
+                - 暂不上报，继续观察
+            value_change:
+                v_love: +1
+            lead_to: Choice_3_1
+
+# 是否继续开除
+Choice_3_1:
+    lead_from:
+        - Choice_3
+    text:
+        - 好吧，0113号，他是第一天开始业务，或许值得一个适应期。
+        - 现在系统已经把他加入了你的特别关注列表里，你每天都会收到关于0113号的特殊提醒。
+        - <br>
+        - 一个星期过去了，0113号的业绩的确提升了一些，可以看得出他的确在努力，但是比起其他骑手，他的业绩依旧是太差了。
+        - <br>
+        - 甚至今天，他还收到了一条投诉。
+        - 你查看了系统记录，他在把午餐交接给顾客时没有拿好，将餐点掉落。
+        - 顾客显然非常生气，而你只能使用系统收益赔偿了顾客。
+        - 你扣掉了他的当单收益作为惩罚，但是他给系统和公司带来的损失已经不可挽回。
+        - 而这对于系统来说是不可原谅的。
+        - <br>
+        - 请问你是否上报系统，将其辞退？
+    options:
+        option_1:
+            text:
+                - 是，上报系统，准备辞退
+            value_change:
+                v_love: -2
+            lead_to: Step_4
+        option_2:
+            text:
+                - 否， 继续观察
+            value_change:
+                v_love: +1
+                o_love: +1
+            lead_to: Choice_3_2
+
+# 是否继续开除
+Choice_3_2:
+    lead_from:
+        - Choice_3_1
+    text:
+        - 好吧，或许这个0113号还值得更多的机会，只是但愿你的关注能有所回报。
+        - <br>
+        - 可是你获得的回报，看看吧，现在他已经入职两周了，却还是业绩最差的那个，而且差评不断。
+        - 哦不，就在此刻，他竟然又被客户投诉了。
+        - <br>
+        - “还能到了地方一直不派送，我真的服了，这已经不是差评的问题了，我看你们是故意想把顾客饿死，我一会儿就要卸载app。
+        - 最后一条评价，我要告诉我身边的每一个人，千万不要再在你们平台上点外卖，又慢又贵！”
+        - <br>
+        - 即使面对那么多挑剔的顾客，你也很少见到这么严厉的投诉。
+        - 你快速调看了一下系统提供的信息，0113号的这一单已经超时一个小时了。
+        - 但GPS显示他明明按时到达了目的地附近，却一直没有派单。
+        - <br>
+        - 顾客提出了要卸载app并差评，这已经对公司的利益造成了严重的损害。
+        - 如果你再不上报系统，开除0113，自身都有可能作为不合格的AI被系统销毁。
+        - 但是0113的行为的确极其反常，或许你还可以再调查一下究竟发生了什么？
+        - <br>
+        - 请问你是否上报系统，开除0113？
+    options:
+        option_1:
+            text:
+                - 是，将其开除
+            value_change:
+                v_love: -2
+            lead_to: Step_4
+        option_2:
+            text:
+                - 否，继续观察
+            value_change:
+                v_love: +1
+                o_love: +1
+            lead_to: Choice_3_3
+
+# 个性化语音指路
+Choice_3_3:
+    lead_from:
+        - Choice_3_2
+    text:
+        - 你查看了一下该单顾客的小区地图，立刻就明白了过来。
+        - 这栋建筑的内部结构极为复杂，而GPS只能显示平面定位，这大概就是为什么0113显示到达位置却没有派送。
+        - <br>
+        - 你突然想起，你其实可以向0113提供个性化语音指引，帮助他确定三维定位，为他单独指导路线。
+        - <br>
+        - 但是你从没使用过这个功能，毕竟这太耗时了，不符合你高效的原则。
+        - 况且就算送到这一单，顾客也不一定会删除评论，损失已经造成了，而你还有很多其他任务需要执行，还有更多的订单需要分配给别的外卖员们。
+        - <br>
+        - 你是否在对话框里给0113个性化的指引？
+    options:
+        option_1:
+            text:
+                - 是，给他个性化的指引
+            lead_to: Step_3_3_1
+        option_2:
+            text:
+                - 否，太耗时低效了，就这样吧
+            lead_to: Step_3_3_2
+
+# 开除决策
+Choice_4:
+    lead_from:
+        - Step_4
+    text:
+        - 看完了这些经历和资料，你是否继续选择上报系统将他开除？
+    options:
+        option_1:
+            text:
+                - 是，继续上报，系统的利益至上
+            value_change:
+                v_love: -2
+            lead_to: Ending_2
+        option_2:
+            text:
+                - 否，有些同情他的身世，还是继续观察吧
+            value_change:
+                v_love: +1
+            lead_to: Judge_4
+
+# 是否打开监控
+Choice_5:
+    lead_from:
+        - Step_5
+    text:
+        - 你困惑不解地看着代表{o_name}的小点在屏幕上移动着，似乎没有什么端倪。
+        - 你突然想到，其实系统给每一个外卖员的客户端都配了摄像头开启权限，可以追踪他们所在的实景状况，但你从来没有开过——你哪里有时间呢，这也太没有效率了。
+        - 不过现在，你却突然想打开摄像头看看了。
+        - <br>
+        - 请问你是否通过监控去查看这个年轻人是如何提高自己的速度的？
+    options:
+        option_1:
+            text:
+                - 是，我要查看
+            lead_to: Step_5_1
+        option_2:
+            text:
+                - 否，没什么必要，只要他的业绩能提升就行
+            value_change:
+                v_love: -1
+            lead_to: Step_6
+
+# 是否上报捷径
+Choice_6:
+    lead_from:
+        - Step_6
+    text:
+        - 请问你是否将这个提升收入方案上报系统？
+    options:
+        option_1:
+            text:
+                - 是，上报系统
+            value_change:
+                v_love: -1
+            lead_to: Ending_4
+        option_2:
+            text:
+                - 否，不上报
+            value_change:
+                v_intelligence: +1
+                v_love: +1
+            lead_to: Step_7
+
+# 是否加单
+Choice_7:
+    lead_from:
+        - Judge_7
+    text:
+        - 你是否选择给他加单？
+        - 或许可以更快地帮助他实现梦想，但也会给他带来更多的危险。
+    options:
+        option_1:
+            text:
+                - 是，他为了梦想自己也会愿意承担这些危险的吧，况且对系统来说，这样也是最优解。
+            value_change:
+                o_intelligence: +1
+                o_strength: +2
+                order_num: +10
+            lead_to: Judge_6_1
+        option_2:
+            text:
+                - 否，这简直是不要命，现在的收入明明已经足以维持生活了。
+            lead_to: Step_8
+
+# 是否上报加单方案
+Choice_7_1:
+    lead_from:
+        - Judge_6_1
+    text:
+        - 是否将加单算法上报系统？
+    options:
+        option_1:
+            text:
+                - 是，上报系统，让所有骑手都能获得更多的单
+            value_change:
+                v_love: -1
+            lead_to: Ending_4
+        option_2:
+            text:
+                - 否，还是暂时继续让{o_name}借机提高业绩吧
+            value_change:
+                v_intelligence: +1
+                v_love: +1
+            lead_to: Choice_7
+

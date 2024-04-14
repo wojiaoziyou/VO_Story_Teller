@@ -6,3 +6,171 @@
 ### Date:       Apr 14, 2024
 ### ===========================================================
 
+# 是否获得【测试骑士】消息（概率选择）
+Judge_1_1:
+    lead_from:
+        - Choice_1_1
+    condition: "D20"
+    options:
+        option_1:
+            condition: "D20 <= 13"
+            text:
+                - 你的AI同事传来了一段名为【测试骑手】的代码，你扫了一眼，原来系统又要指派新的测试骑手了。
+                - 这些骑手看起来像是人类，数据跟人类也没什么区别，只是他是系统专门用来测试你们这些AI的。
+                - 系统曾经说过，如果不能成功通过测试的AI都要被销毁，不过你对自己还是很有信心的。
+            value_change:
+                tip_flag: True
+                v_intelligence: +1
+            lead_to: Judge_1_2
+        option_2:
+            condition: "D20 > 13"
+            text:
+                - 你的同事们都没有回应你，你回到了系统。
+            lead_to: Judge_1_2
+
+Judge_1_2:
+    lead_from:
+        - Judge_1_1
+        - Step_1_2
+        - Step_1_3
+        - Step_1_4
+    condition: {activity_cnt}
+    options:
+        option_1:
+            condition: "{activity_cnt} == 3"
+            text:
+                - 放松时间结束，是时候开始工作了。
+            lead_to: Step_2
+        option_2:
+            condition: "{activity_cnt} < 3"
+            text:
+                - 你还有时间可以选择更多的活动。
+            lead_to: Choice_1
+
+Judge_2_1:
+    lead_from:
+        - Choice_2_1
+    condition: {reward_cnt}
+    options:
+        option_1:
+            condition: "{reward_cnt} >= 3"
+            text:
+                - 你选择了业绩优秀的骑手，为他们上报了系统，他们将会获得奖励。
+            value_change:
+                v_intelligence: +1
+            lead_to: Choice_2_2
+        option_2:
+            condition: "{reward_cnt} < 3"
+            text:
+                - 还可以继续选择优秀骑手进行奖励。
+            lead_to: Choice_2_1
+
+Judge_2_2:
+    lead_from:
+        - Choice_2_2
+    condition: {punish_cnt}
+    options:
+        option_1:
+            condition: "{punish_cnt} < 3"
+            text:
+                - 还可以继续选择表现不佳的骑手进行关注。
+            lead_to: Choice_2_2
+        option_2:
+            condition: "{punish_cnt} >= 3 and {attention_flag} is False"
+            text:
+                - 你选择了业绩不佳的骑手，为他们上报了系统，他们将会被重点关注。
+                - <br>
+                - 但你似乎没有发现真正需要关注的骑手。
+            lead_to: Ending_1
+        option_3:
+            condition: "{punish_cnt} >= 3 and {attention_flag} is True"
+            text:
+                - 你选择了业绩不佳的骑手，为他们上报了系统，他们将会被重点关注。
+            value_change:
+                v_intelligence: +1
+            lead_to: Step_3
+
+# 增加一步loop判断（是否经过{Step_13_2}）
+Judge_4:
+    lead_from:
+        - Choice_4
+    condition: {monthly_ranking_flag}
+    options:
+        option_1:
+            condition: "{monthly_ranking_flag} is False"
+            lead_to: Step_5
+        option_2:
+            condition: "{monthly_ranking_flag} is True"
+            lead_to: Ending_3
+
+# 加单算法：风险是否致死（概率选择）
+Judge_6_1:
+    lead_from:
+        - Choice_7
+    condition: "D100"
+    options:
+        option_1:
+            # 加单致死
+            condition: "D100 < {order_num}"
+            lead_to: Ending_5
+        option_2:
+            # 加单不致死，业绩排名上升
+            condition: "D100 >= {order_num}"
+            text:
+                - 你给他加了单，他的收入增加了，他的业绩排名也有所上升。
+                - 你很高兴自己做了正确的选择。
+            lead_to: Choice_7_1
+
+# 刺激加单（收入判断）
+Judge_7:
+    lead_from:
+        - Step_7
+    condition: {order_num}
+    options:
+        option_1:
+            condition: "{order_num} < {order_num_low_standard}"
+            text:
+                - 但是他的收入依然太少了，甚至于不足够他自己果腹。
+                - 你看到他每天都在深夜去便利店，买——更准确地说——是捡来一些过期处理的便当。
+                - 你不知道只吃这些东西，对人类来说意味着什么，你只看到饿了一天的他靠在他的车子上狼吞虎咽，吃的很香。
+            lead_to: Choice_7
+        option_2:
+            condition: "{order_num} >= {order_num_low_standard} and {order_num} < {order_num_high_standard}"
+            text:
+                - 现在他能够吃上一顿像样的饭了。
+                - 尽管都是在等红灯的间隙，但他至少吃的不是便利单过期处理的便当了。
+                - 但是你知道，这样的收入，他根本不可能攒够钱去他梦想的音乐学校。
+            lead_to: Choice_7
+        option_3:
+            condition: "{order_num} >= {order_num_high_standard}"
+            text:
+                - 现在他总算能攒下一点钱了，你看着他每天查看收入时的笑容，感觉你的世界也明亮了起来。
+                - 只是你知道，按照这个速度，他还需要好久才能攒够去音乐学院的学费。
+            lead_to: Choice_7
+
+# 支线判断（是否进入过{Step_13_2}）
+Judge_8_1:
+    lead_from:
+        - Step_8
+    condition: {monthly_ranking_flag}
+    options:
+        option_1:
+            condition: "{monthly_ranking_flag} is False"
+            lead_to: Judge_8_2
+        option_2:
+            condition: "{monthly_ranking_flag} is True"
+            lead_to: Step_13_2
+
+Judge_8_2:
+    lead_from:
+        - Judge_8_1
+    condition: D{o_intelligence_judge_8_2}
+    options:
+        option_1:
+            # O开始觉醒
+            condition: "D{o_intelligence_judge_8_2} <= {o_intelligence}"
+            lead_to: Step_9
+        option_2:
+            # O没有觉醒
+            condition: "D{o_intelligence_judge_8_2} > {o_intelligence}"
+            lead_to: Step_13_2
