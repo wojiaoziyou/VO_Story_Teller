@@ -17,7 +17,7 @@ Judge_1_1:
             text:
                 - 你的AI同事传来了一段名为【测试骑手】的代码，你扫了一眼，原来系统又要指派新的测试骑手了。
                 - 这些骑手看起来像是人类，数据跟人类也没什么区别，只是他是系统专门用来测试你们这些AI的。
-                - 系统曾经说过，如果不能成功通过测试的AI都要被销毁，不过你对自己还是很有信心的。
+                - 系统曾经说过，不能成功通过测试的AI都要被销毁，不过你对自己还是很有信心的。
             value_change:
                 tip_flag: True
                 v_intelligence: +1
@@ -90,19 +90,6 @@ Judge_2_2:
                 v_intelligence: +1
             lead_to: Step_3
 
-# 增加一步loop判断（是否经过{Step_13_2}）
-Judge_4:
-    lead_from:
-        - Choice_4
-    condition: {monthly_ranking_flag}
-    options:
-        option_1:
-            condition: "{monthly_ranking_flag} is False"
-            lead_to: Step_5
-        option_2:
-            condition: "{monthly_ranking_flag} is True"
-            lead_to: Ending_3
-
 # 加单算法：风险是否致死（概率选择）
 Judge_6_1:
     lead_from:
@@ -148,29 +135,16 @@ Judge_7:
                 - 只是你知道，按照这个速度，他还需要好久才能攒够去音乐学院的学费。
             lead_to: Choice_7
 
-# 支线判断（是否进入过{Step_13_2}）
 Judge_8_1:
     lead_from:
         - Step_8
-    condition: {monthly_ranking_flag}
-    options:
-        option_1:
-            condition: "{monthly_ranking_flag} is False"
-            lead_to: Judge_8_2
-        option_2:
-            condition: "{monthly_ranking_flag} is True"
-            lead_to: Step_13_2
-
-Judge_8_2:
-    lead_from:
-        - Judge_8_1
-    condition: D{o_intelligence_judge_8_2}
+    condition: D{o_intelligence_judge_8_1}
     options:
         option_1:
             # O开始觉醒
-            condition: "D{o_intelligence_judge_8_2} <= {o_intelligence}"
+            condition: "D{o_intelligence_judge_8_1} <= {o_intelligence}"
             lead_to: Step_9
         option_2:
             # O没有觉醒
-            condition: "D{o_intelligence_judge_8_2} > {o_intelligence}"
+            condition: "D{o_intelligence_judge_8_1} > {o_intelligence}"
             lead_to: Step_13_2

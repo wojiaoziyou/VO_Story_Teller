@@ -394,7 +394,7 @@ Choice_4:
                 - 否，有些同情他的身世，还是继续观察吧
             value_change:
                 v_love: +1
-            lead_to: Judge_4
+            lead_to: Step_5
 
 # 是否打开监控
 Choice_5:

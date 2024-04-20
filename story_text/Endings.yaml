@@ -35,7 +35,7 @@ Ending_2:
 # V始终未上报，未通过考核，被系统报废；新AI替代V上线，O被重置。真相大白O是测试AI，V的感情无疾而终并把自己带上了死亡之路
 Ending_3:
     lead_from:
-        - Judge_4
+        - Judge_4  # TODO
     title: 镜花水月
     text:
         - 你没有上报，也没有做出任何改变，只是继续与{o_name}一起工作。
