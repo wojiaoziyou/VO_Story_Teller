@@ -23,27 +23,27 @@ Step_9:
         - 那是个年轻男人，带着鸭舌帽，看不清脸，面前倒扣着一个桶，还有一个塑料盒子，里面有一枚二十五分的硬币。
         - 突然，这个男人敲了一下桶。
         - <br>
-        - Say baby， say baby， say baby（哦亲爱的，亲爱的，亲爱的）
-        - What you doin？（你在做什么呢？）
-        - Where you at？（你在哪里呢？）
+        - Say baby, say baby, say baby（哦亲爱的，亲爱的，亲爱的）
+        - What you doin?（你在做什么呢？）
+        - Where you at?（你在哪里呢？）
         - Oh, you got plans?（哦你已经有了别的计划？）
-        - Don’t say that（请不要拒绝我）
+        - Don't say that（请不要拒绝我）
         - <br>
         - 一个城市的街头歌手，正如你的图像分析告诉你的那样，不过你该提醒{o_name}餐快好了，你转回摄像头，却发现年轻人正在专注地看着那个歌手，眼睛里闪着光。
         - <br>
         - We should be dancing romancing in the east wing（我们本应浪漫起舞）
-        - And the west wing of this mansion, what’s happnin’?（在我们的房子之中）
-        - I ain’t playin’ no games, every word I say is coming straight from the heart（我不是开玩笑，我的句句都是出于真心）
+        - And the west wing of this mansion, what's happnin'?（在我们的房子之中）
+        - I ain't playin' no games, every word I say is coming straight from the heart（我不是开玩笑，我的句句都是出于真心）
         - So if you tryna lay in these arms（所以如果你愿意拥我入怀）
-        - I’ma leave the door open（我将等待着你）
+        - I'ma leave the door open（我将等待着你）
         - <br>
         - 你迷惑不解地看着{o_name}，他应该去取餐了，但是他向前走了一步，面对着那个歌手。
         - 接着，他合着他的鼓点，一起唱道：
         - That you feel the way I feel and you want me like I want you tonight（如果你也如此爱我，如此想要我，像我对你那样）
         - Tell me you are coming through（告诉我你会走向我）
-        - Ooh, you’re so sweet（你如此甜蜜）
+        - Ooh, you're so sweet（你如此甜蜜）
         - So tight（如此亲切）
-        - I won’t bite（如果你想要）
+        - I won't bite（如果你想要）
         - Unless you like（我注定为你魂牵梦绕）
         - 开始他的声音并不大，几乎是合着那个歌手的哼唱，微不可闻。
         - 但是他的声音如此清亮甜美，你知道这声音不可能被埋没，如同烈艳的玫瑰，他的声音逐渐响亮，和歌手的声音交织在一起。
@@ -52,18 +52,18 @@ Step_9:
         - 他站在空无一人的广场，除了面前的打着桶的歌手没有一个听众，可是他如同站在宇宙中心。
         - 他发着光，如同一个刚刚降世的小小神明，用笑和歌声点亮整个世界。
         - <br>
-        - 他真美。这个想法出现在你的头脑里。
+        - 他真美。这个想法出现在你的意识里。
         - <br>
         - That you feel the way I feel and you want me like I want you tonight（如果你也如此爱我，如此想要我，像我对你那样）
         - I need you baby（我需要你，亲爱的）
         - I got to see you baby（我想要见你，亲爱的）
-        - I’m tryna give you this（我想给你真心）
-        - I’m leaving my door open baby（我将等待着你）
-        - And I’m hopin’（因为我希望）
-        - Hopin’（希冀）
+        - I'm tryna give you this（我想给你真心）
+        - I'm leaving my door open baby（我将等待着你）
+        - And I'm hopin'（因为我希望）
+        - Hopin'（希冀）
         - That you feel the way I feel and you want me like I want you tonight（如果你也如此爱我，如此想要我，像我对你那样）
-        - Tell me that you’re coming through（就告诉我你会回到我身边）
-        - I‘ma leaving the door open（我一直在等待着你）
+        - Tell me that you're coming through（就告诉我你会回到我身边）
+        - I'ma leaving the door open（我一直在等待着你）
     value_change:
         o_intelligence: +2
         o_love: +2
